@@ -6,18 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Social preview (works after hosting with a public URL) -->
-    <meta property="og:title" content="Aaradhya & Shreyas – Wedding Invitation" />
+    <meta
+      property="og:title"
+      content="Aaradhya & Shreyas – Wedding Invitation"
+    />
     <meta
       property="og:description"
       content="You are warmly invited to celebrate this special day. Tap to view the full invitation."
     />
-    <!-- You can later change this to a custom hosted image on your own domain -->
+    <!-- You can later change this to a hosted image on your own domain -->
     <meta
       property="og:image"
       content="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://wedding-mu-flame.vercel.app/" />
+    <meta property="og:url" content="https://wedding-54aq.vercel.app/" />
     <meta name="theme-color" content="#c47b9b" />
 
     <style>
@@ -478,6 +481,13 @@
         color: #777;
       }
 
+      .download-row {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
       @media (max-width: 880px) {
         body {
           flex-direction: column;
@@ -505,6 +515,8 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- html2canvas for PNG capture -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <script type="text/babel">
       const { useState, useEffect, useRef } = React;
@@ -514,7 +526,7 @@
       function WeddingApp() {
         // Content state
         const [bride, setBride] = useState("Aaradhya");
-        const [groom, setGroom] = useState("Rahul");
+        const [groom, setGroom] = useState("Shreyas");
         const [date, setDate] = useState(""); // yyyy-mm-dd
         const [location, setLocation] = useState("Bangalore, India");
         const [welcome, setWelcome] = useState(
@@ -536,6 +548,7 @@
         // 3D hero tilt
         const [tilt, setTilt] = useState({ x: 0, y: 0 });
         const heroRef = useRef(null);
+        const pageRef = useRef(null); // for full-poster capture
 
         function handleMouseMove(e) {
           const rect = heroRef.current?.getBoundingClientRect();
@@ -633,7 +646,7 @@
           reader.readAsDataURL(file);
         }
 
-        // Helpers for URL / share
+        // Helpers
         function siteUrl() {
           return window.location.href.split("#")[0];
         }
@@ -651,7 +664,6 @@
         }
 
         function handleRsvpClick() {
-          // Only link, so WhatsApp shows invitation preview, not single line text
           window.open(rsvpUrl(), "_blank");
           ensureMusic();
         }
@@ -672,7 +684,7 @@
           }
         }
 
-        // WhatsApp SHARE: send only the site URL so preview shows cleanly
+        // WhatsApp SHARE: send only the site URL so preview shows
         function handleShareWhatsApp() {
           ensureMusic();
           const url = siteUrl();
@@ -697,7 +709,7 @@
           );
         }
 
-        // QR for website URL (when hosted) – opens the full invitation site
+        // QR for website URL – opens the full invitation site
         const qrSrc =
           "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" +
           encodeURIComponent(siteUrl());
@@ -740,6 +752,35 @@
           background: theme,
           boxShadow: `0 14px 32px ${theme}99`,
         };
+
+        // ----- PNG generation (local download, user can send in WhatsApp) -----
+        async function downloadPngFromElement(element, fileName) {
+          if (!element) return;
+          const canvas = await html2canvas(element, {
+            useCORS: true,
+            backgroundColor: "#faf7f5",
+            scale: 2,
+          });
+          const dataUrl = canvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+
+        function handleDownloadHero() {
+          if (heroRef.current) {
+            downloadPngFromElement(heroRef.current, "wedding-hero-card.png");
+          }
+        }
+
+        function handleDownloadPoster() {
+          if (pageRef.current) {
+            downloadPngFromElement(pageRef.current, "wedding-full-poster.png");
+          }
+        }
 
         return (
           <div className="app">
@@ -863,10 +904,27 @@
                   Upload MP3/WAV. Plays after first tap/click once hosted.
                 </span>
               </div>
+
+              <hr className="divider" />
+
+              <div className="field">
+                <label>Download Invitation Card (PNG)</label>
+                <div className="download-row">
+                  <button className="share-btn" onClick={handleDownloadHero}>
+                    🎴 Hero card
+                  </button>
+                  <button className="share-btn" onClick={handleDownloadPoster}>
+                    🖼 Full poster
+                  </button>
+                </div>
+                <span className="hint">
+                  Use these PNGs as actual invitation images in WhatsApp.
+                </span>
+              </div>
             </aside>
 
             {/* MAIN 3D INVITATION */}
-            <div className="main" onClick={ensureMusic}>
+            <div className="main" onClick={ensureMusic} ref={pageRef}>
               <div className="hero-wrapper">
                 <div
                   className="hero-3d"
@@ -986,7 +1044,7 @@
                       style={accentBgStyle}
                     >
                       <span>💌</span>
-                      <span>RSVP via WhatsApp</span>
+                      <span>RSVP via WhatsApp (link)</span>
                     </button>
 
                     <div className="share-row">
@@ -1000,7 +1058,7 @@
                         className="share-btn"
                         onClick={handleShareWhatsApp}
                       >
-                        🟢 WhatsApp
+                        🟢 WhatsApp (link)
                       </button>
                       <button
                         className="share-btn"
@@ -1019,8 +1077,9 @@
                     <div className="qr-wrap">
                       <img src={qrSrc} alt="Invitation QR" />
                       <div className="qr-text">
-                        Scan this on any phone to open the full 3D invitation.
-                        Ideal for printing on cards or showing at the venue.
+                        Scan this on any phone to open the full 3D invitation
+                        website. For direct image sharing, use the PNG download
+                        buttons on the left and send those images in WhatsApp.
                       </div>
                     </div>
 
@@ -1080,5 +1139,3 @@
     </script>
   </body>
 </html>
-
-
