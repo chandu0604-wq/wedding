@@ -5,7 +5,7 @@
     <title>Wedding Invitation – React 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Social preview (works after hosting with a public URL) -->
+    <!-- Social preview -->
     <meta
       property="og:title"
       content="Aaradhya & Shreyas – Wedding Invitation"
@@ -14,7 +14,6 @@
       property="og:description"
       content="You are warmly invited to celebrate this special day. Tap to view the full invitation."
     />
-    <!-- You can later change this to a hosted image on your own domain -->
     <meta
       property="og:image"
       content="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
@@ -58,7 +57,6 @@
         min-height: 100vh;
       }
 
-      /* Left control panel */
       .panel {
         width: 320px;
         max-width: 100%;
@@ -135,7 +133,6 @@
         margin: 10px 0;
       }
 
-      /* Main content */
       .main {
         flex: 1;
         overflow-y: auto;
@@ -511,23 +508,18 @@
   <body>
     <div id="root"></div>
 
-    <!-- React + ReactDOM + Babel CDN -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- html2canvas for PNG capture -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <script type="text/babel">
       const { useState, useEffect, useRef } = React;
 
-      const WHATSAPP_NUMBER = "919019823918"; // 91 + 9019823918
-
       function WeddingApp() {
-        // Content state
         const [bride, setBride] = useState("Aaradhya");
         const [groom, setGroom] = useState("Shreyas");
-        const [date, setDate] = useState(""); // yyyy-mm-dd
+        const [date, setDate] = useState("");
         const [location, setLocation] = useState("Bangalore, India");
         const [welcome, setWelcome] = useState(
           "We are delighted to invite you to celebrate our special day with us."
@@ -544,11 +536,11 @@
         const [musicUrl, setMusicUrl] = useState(
           "https://cdn.pixabay.com/audio/2021/09/30/audio_b4b5c1c8b4.mp3"
         );
+        const [whatsappNumber, setWhatsappNumber] = useState("919019823918");
 
-        // 3D hero tilt
         const [tilt, setTilt] = useState({ x: 0, y: 0 });
         const heroRef = useRef(null);
-        const pageRef = useRef(null); // for full-poster capture
+        const pageRef = useRef(null);
 
         function handleMouseMove(e) {
           const rect = heroRef.current?.getBoundingClientRect();
@@ -556,16 +548,14 @@
           const x = (e.clientX - rect.left) / rect.width - 0.5;
           const y = (e.clientY - rect.top) / rect.height - 0.5;
           setTilt({
-            x: y * -10, // rotateX
-            y: x * 10, // rotateY
+            x: y * -10,
+            y: x * 10,
           });
         }
-
         function handleMouseLeave() {
           setTilt({ x: 0, y: 0 });
         }
 
-        // Countdown
         const [countdown, setCountdown] = useState({
           days: "--",
           hours: "--",
@@ -594,7 +584,6 @@
           return () => clearInterval(id);
         }, [date]);
 
-        // Music
         const audioRef = useRef(null);
         const [hasInteracted, setHasInteracted] = useState(false);
         function ensureMusic() {
@@ -622,7 +611,6 @@
           reader.readAsDataURL(file);
         }
 
-        // Image uploads (convert to data URLs)
         function handleImageUpload(e, setter) {
           const file = e.target.files?.[0];
           if (!file) return;
@@ -631,7 +619,6 @@
           reader.readAsDataURL(file);
         }
 
-        // gallery index change
         function handleGalleryUpload(idx, e) {
           const file = e.target.files?.[0];
           if (!file) return;
@@ -646,21 +633,20 @@
           reader.readAsDataURL(file);
         }
 
-        // Helpers
         function siteUrl() {
           return window.location.href.split("#")[0];
         }
 
-        // RSVP: send ONLY the invitation link in message (RSVP = B)
-        function rsvpUrl() {
-          const url = siteUrl();
-          return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-            url
-          )}`;
-        }
-
         function shareText() {
           return `You are invited to the wedding of ${bride} & ${groom} at ${location}. Tap to view the full invitation: ${siteUrl()}`;
+        }
+
+        // RSVP: text + invitation link, to editable WhatsApp number
+        function rsvpUrl() {
+          const msg = `Hi! I would like to RSVP for the wedding of ${bride} & ${groom}.\n\nInvitation: ${siteUrl()}`;
+          return `https://wa.me/${encodeURIComponent(
+            whatsappNumber
+          )}?text=${encodeURIComponent(msg)}`;
         }
 
         function handleRsvpClick() {
@@ -673,9 +659,9 @@
           const text = shareText();
           const url = siteUrl();
           if (navigator.share) {
-            navigator
-              .share({ title: "Wedding Invitation", text, url })
-              .catch(() => {});
+            navigator.share({ title: "Wedding Invitation", text, url }).catch(
+              () => {}
+            );
           } else {
             alert(
               "Sharing not supported on this browser.\n\nYou can copy this text:\n\n" +
@@ -684,12 +670,13 @@
           }
         }
 
-        // WhatsApp SHARE: send only the site URL so preview shows
         function handleShareWhatsApp() {
           ensureMusic();
-          const url = siteUrl();
-          const text = encodeURIComponent(url);
-          window.open(`https://wa.me/?text=${text}`, "_blank");
+          const text = shareText();
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(text)}`,
+            "_blank"
+          );
         }
 
         function handleShareTelegram() {
@@ -701,6 +688,7 @@
             "_blank"
           );
         }
+
         function handleShareInstagram() {
           ensureMusic();
           alert(
@@ -709,12 +697,10 @@
           );
         }
 
-        // QR for website URL – opens the full invitation site
         const qrSrc =
           "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" +
           encodeURIComponent(siteUrl());
 
-        // formatted date
         let displayDate = "Our Wedding Day";
         if (date) {
           const d = new Date(date);
@@ -726,7 +712,6 @@
           });
         }
 
-        // scroll reveal
         useEffect(() => {
           const els = document.querySelectorAll(".reveal");
           const ob = new IntersectionObserver(
@@ -753,7 +738,6 @@
           boxShadow: `0 14px 32px ${theme}99`,
         };
 
-        // ----- PNG generation (local download, user can send in WhatsApp) -----
         async function downloadPngFromElement(element, fileName) {
           if (!element) return;
           const canvas = await html2canvas(element, {
@@ -784,13 +768,12 @@
 
         return (
           <div className="app">
-            {/* LEFT REACT CONTROL PANEL */}
             <aside className="panel">
               <div className="panel-title">
                 Wedding Editor <span className="badge">React 3D</span>
               </div>
               <div className="panel-sub">
-                Change anything live. Perfect for customizing for any couple.
+                Customize everything and share it instantly.
               </div>
 
               <div className="field">
@@ -798,7 +781,6 @@
                 <input
                   value={bride}
                   onChange={(e) => setBride(e.target.value)}
-                  placeholder="Bride"
                 />
               </div>
 
@@ -807,7 +789,6 @@
                 <input
                   value={groom}
                   onChange={(e) => setGroom(e.target.value)}
-                  placeholder="Groom"
                 />
               </div>
 
@@ -828,7 +809,6 @@
                 <input
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder="City, Country"
                 />
               </div>
 
@@ -850,6 +830,20 @@
                 />
                 <span className="hint">
                   Affects accents, bullets & button glow.
+                </span>
+              </div>
+
+              <div className="field">
+                <label>RSVP WhatsApp number</label>
+                <input
+                  value={whatsappNumber}
+                  onChange={(e) =>
+                    setWhatsappNumber(e.target.value.replace(/\s+/g, ""))
+                  }
+                  placeholder="e.g. 919876543210"
+                />
+                <span className="hint">
+                  Include country code, no + or spaces. Any number is allowed.
                 </span>
               </div>
 
@@ -901,7 +895,7 @@
                   onChange={handleMusicUpload}
                 />
                 <span className="hint">
-                  Upload MP3/WAV. Plays after first tap/click once hosted.
+                  Plays after first tap/click on the page.
                 </span>
               </div>
 
@@ -918,12 +912,12 @@
                   </button>
                 </div>
                 <span className="hint">
-                  Use these PNGs as actual invitation images in WhatsApp.
+                  Use these PNGs if you want to send the invitation as an image
+                  directly in WhatsApp.
                 </span>
               </div>
             </aside>
 
-            {/* MAIN 3D INVITATION */}
             <div className="main" onClick={ensureMusic} ref={pageRef}>
               <div className="hero-wrapper">
                 <div
@@ -1044,7 +1038,7 @@
                       style={accentBgStyle}
                     >
                       <span>💌</span>
-                      <span>RSVP via WhatsApp (link)</span>
+                      <span>RSVP via WhatsApp</span>
                     </button>
 
                     <div className="share-row">
@@ -1077,9 +1071,9 @@
                     <div className="qr-wrap">
                       <img src={qrSrc} alt="Invitation QR" />
                       <div className="qr-text">
-                        Scan this on any phone to open the full 3D invitation
-                        website. For direct image sharing, use the PNG download
-                        buttons on the left and send those images in WhatsApp.
+                        Scan to open the full invitation website. Clicking the
+                        link in WhatsApp or scanning this QR will always open
+                        the same invitation page.
                       </div>
                     </div>
 
