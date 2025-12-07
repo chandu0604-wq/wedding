@@ -6,16 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Social preview (works after hosting with a public URL) -->
-    <meta property="og:title" content="Wedding Invitation" />
+    <meta property="og:title" content="Aaradhya & Shreyas – Wedding Invitation" />
     <meta
       property="og:description"
       content="You are warmly invited to celebrate this special day. Tap to view the full invitation."
     />
+    <!-- You can later change this to a custom hosted image on your own domain -->
     <meta
       property="og:image"
       content="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://wedding-mu-flame.vercel.app/" />
     <meta name="theme-color" content="#c47b9b" />
 
     <style>
@@ -631,24 +633,25 @@
           reader.readAsDataURL(file);
         }
 
-        // WhatsApp + share
-        function rsvpMessage() {
-          return `Hi! I would like to RSVP for the wedding of ${bride} & ${groom}.`;
-        }
-        function rsvpUrl() {
-          return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-            rsvpMessage()
-          )}`;
-        }
-
+        // Helpers for URL / share
         function siteUrl() {
           return window.location.href.split("#")[0];
         }
+
+        // RSVP: send ONLY the invitation link in message (RSVP = B)
+        function rsvpUrl() {
+          const url = siteUrl();
+          return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+            url
+          )}`;
+        }
+
         function shareText() {
           return `You are invited to the wedding of ${bride} & ${groom} at ${location}. Tap to view the full invitation: ${siteUrl()}`;
         }
 
         function handleRsvpClick() {
+          // Only link, so WhatsApp shows invitation preview, not single line text
           window.open(rsvpUrl(), "_blank");
           ensureMusic();
         }
@@ -669,11 +672,14 @@
           }
         }
 
+        // WhatsApp SHARE: send only the site URL so preview shows cleanly
         function handleShareWhatsApp() {
           ensureMusic();
-          const text = encodeURIComponent(shareText());
+          const url = siteUrl();
+          const text = encodeURIComponent(url);
           window.open(`https://wa.me/?text=${text}`, "_blank");
         }
+
         function handleShareTelegram() {
           ensureMusic();
           const text = encodeURIComponent(shareText());
@@ -691,7 +697,7 @@
           );
         }
 
-        // QR for website URL (when hosted)
+        // QR for website URL (when hosted) – opens the full invitation site
         const qrSrc =
           "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" +
           encodeURIComponent(siteUrl());
@@ -1074,4 +1080,5 @@
     </script>
   </body>
 </html>
+
 
