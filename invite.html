@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wedding Invitation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Static OG tags (you can tweak text & image) -->
+    <meta property="og:title" content="Wedding Invitation" />
+    <meta
+      property="og:description"
+      content="You are warmly invited to celebrate this special day. Tap to view the full invitation."
+    />
+    <meta
+      property="og:image"
+      content="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#c47b9b" />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(
+          circle at top,
+          #fde7f2 0,
+          #f8f3ff 30%,
+          #faf7f5 60%,
+          #f3f3f3 100%
+        );
+        color: #222;
+        min-height: 100vh;
+        display: flex;
+      }
+      #root {
+        flex: 1;
+        display: flex;
+      }
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        perspective: 1400px;
+      }
+      .hero-wrapper {
+        padding: 40px 16px 0;
+      }
+      .hero-3d {
+        position: relative;
+        border-radius: 28px;
+        overflow: hidden;
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 26px 60px rgba(18, 8, 41, 0.6);
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        z-index: -2;
+      }
+      .hero-bg img {
+        width: 110%;
+        height: 110%;
+        object-fit: cover;
+        filter: brightness(0.35) saturate(1.2);
+        transform: translateZ(-60px) scale(1.1);
+      }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            circle at top,
+            #ffffff11 0,
+            transparent 45%
+          ),
+          linear-gradient(to bottom, #050513b3, #010106f0, #000000aa);
+        z-index: -1;
+      }
+      .hero {
+        padding: 80px 22px 40px;
+        text-align: center;
+        color: #fff;
+        transform-style: preserve-3d;
+      }
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 16px;
+        border-radius: 999px;
+        border: 1px solid #ffffff55;
+        background: #ffffff15;
+        backdrop-filter: blur(6px);
+        font-size: 0.82rem;
+        transform: translateZ(30px);
+      }
+      .hero h1 {
+        font-size: 2.7rem;
+        letter-spacing: 2px;
+        margin: 10px 0 4px;
+        text-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+        transform: translateZ(40px);
+      }
+      .hero-sub {
+        font-size: 1rem;
+        opacity: 0.95;
+        transform: translateZ(30px);
+      }
+      .hero-text {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0.9;
+        transform: translateZ(25px);
+      }
+      .countdown {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        transform: translateZ(35px);
+      }
+      .count-card {
+        min-width: 70px;
+        padding: 8px 10px;
+        border-radius: 14px;
+        background: #ffffff1f;
+        border: 1px solid #ffffff3a;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        font-size: 0.8rem;
+        backdrop-filter: blur(8px);
+      }
+      .count-value {
+        font-size: 1.35rem;
+        font-weight: 600;
+      }
+      section {
+        padding: 30px 18px 0;
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+      }
+      .section-sub {
+        font-size: 0.88rem;
+        color: #777;
+        margin-bottom: 14px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 22px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 16px 15px;
+        box-shadow: 0 16px 40px rgba(20, 6, 50, 0.12);
+        position: relative;
+        overflow: hidden;
+      }
+      .label {
+        font-size: 0.75rem;
+        color: #9964b3;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 4px;
+      }
+      .timeline {
+        border-left: 2px solid #e2c9f3;
+        margin-top: 6px;
+        padding-left: 14px;
+      }
+      .timeline-item {
+        margin-bottom: 12px;
+        position: relative;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -15px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #c47b9b;
+        box-shadow: 0 0 0 4px #f5d5e6;
+      }
+      .timeline-time {
+        font-size: 0.8rem;
+        color: #999;
+      }
+      .timeline-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .timeline-desc {
+        font-size: 0.83rem;
+      }
+      .rsvp-btn {
+        margin-top: 12px;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 999px;
+        background: #c47b9b;
+        color: #fff;
+        font-size: 0.92rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        box-shadow: 0 14px 32px rgba(196, 123, 155, 0.7);
+        transition: transform 0.12s, box-shadow 0.12s;
+      }
+      .rsvp-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 40px rgba(196, 123, 155, 0.9);
+      }
+      .share-row {
+        margin-top: 13px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .share-btn {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid #dac5f0;
+        background: #fff;
+        font-size: 0.8rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: background 0.15s, transform 0.1s;
+      }
+      .share-btn:hover {
+        background: #f6ecff;
+      }
+      .qr-wrap {
+        margin-top: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+      }
+      .qr-wrap img {
+        width: 150px;
+        height: 150px;
+        border-radius: 16px;
+        border: 1px solid #eee;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+        background: #fff;
+      }
+      .qr-text {
+        font-size: 0.8rem;
+        color: #666;
+        max-width: 260px;
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 14px;
+        margin-top: 8px;
+      }
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+      }
+      .gallery-item img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+      }
+      .gallery-item::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.5),
+          transparent 55%
+        );
+        opacity: 0.85;
+        pointer-events: none;
+      }
+      .gallery-label {
+        position: absolute;
+        left: 12px;
+        bottom: 10px;
+        color: #fff;
+        font-size: 0.8rem;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+      }
+      footer {
+        text-align: center;
+        padding: 22px 10px 26px;
+        font-size: 0.8rem;
+        color: #777;
+      }
+      @media (max-width: 880px) {
+        body {
+          flex-direction: column;
+        }
+        .hero-wrapper {
+          padding-top: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState, useEffect, useRef } = React;
+
+      function getParams() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+          bride: p.get("bride") || "Bride",
+          groom: p.get("groom") || "Groom",
+          date: p.get("date") || "",
+          location: p.get("location") || "Venue",
+          welcome:
+            p.get("welcome") ||
+            "We are delighted to invite you to celebrate our special day with us.",
+          theme: p.get("theme") || "#c47b9b",
+          phone: p.get("phone") || "",
+          heroImage:
+            p.get("heroImage") ||
+            "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg",
+        };
+      }
+
+      function siteUrl() {
+        return window.location.href.split("#")[0];
+      }
+
+      function InviteApp() {
+        const { bride, groom, date, location, welcome, theme, phone, heroImage } =
+          getParams();
+
+        const [tilt, setTilt] = useState({ x: 0, y: 0 });
+        const heroRef = useRef(null);
+
+        function handleMouseMove(e) {
+          const rect = heroRef.current?.getBoundingClientRect();
+          if (!rect) return;
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          setTilt({ x: y * -10, y: x * 10 });
+        }
+        function handleMouseLeave() {
+          setTilt({ x: 0, y: 0 });
+        }
+
+        const [countdown, setCountdown] = useState({
+          days: "--",
+          hours: "--",
+          mins: "--",
+          secs: "--",
+        });
+
+        useEffect(() => {
+          if (!date) return;
+          const target = new Date(date);
+          function tick() {
+            const now = new Date();
+            const diff = target - now;
+            if (diff <= 0) {
+              setCountdown({ days: 0, hours: 0, mins: 0, secs: 0 });
+              return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+            setCountdown({ days, hours, mins, secs });
+          }
+          tick();
+          const id = setInterval(tick, 1000);
+          return () => clearInterval(id);
+        }, [date]);
+
+        const audioRef = useRef(null);
+        const [hasInteracted, setHasInteracted] = useState(false);
+        function ensureMusic() {
+          if (hasInteracted) return;
+          setHasInteracted(true);
+          audioRef.current?.play().catch(() => {});
+        }
+        useEffect(() => {
+          window.addEventListener("click", ensureMusic, { once: true });
+          window.addEventListener("touchstart", ensureMusic, { once: true });
+          return () => {
+            window.removeEventListener("click", ensureMusic);
+            window.removeEventListener("touchstart", ensureMusic);
+          };
+        }, []);
+
+        let displayDate = "Our Wedding Day";
+        if (date) {
+          const d = new Date(date);
+          displayDate = d.toLocaleDateString(undefined, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        }
+
+        const inviteLink = siteUrl();
+
+        function rsvpUrl() {
+          const msg = `Hi! I would like to RSVP for the wedding of ${bride} & ${groom}.\n\nInvitation: ${inviteLink}`;
+          if (phone) {
+            return `https://wa.me/${encodeURIComponent(
+              phone
+            )}?text=${encodeURIComponent(msg)}`;
+          }
+          return `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        }
+
+        function handleRsvpClick() {
+          window.open(rsvpUrl(), "_blank");
+        }
+
+        function shareText() {
+          return `You are invited to the wedding of ${bride} & ${groom} at ${location}. Tap to view the full invitation: ${inviteLink}`;
+        }
+
+        function handleShareWhatsApp() {
+          const text = shareText();
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(text)}`,
+            "_blank"
+          );
+        }
+
+        function handleShareTelegram() {
+          const text = encodeURIComponent(shareText());
+          const url = encodeURIComponent(inviteLink);
+          window.open(
+            `https://t.me/share/url?url=${url}&text=${text}`,
+            "_blank"
+          );
+        }
+
+        const qrSrc =
+          "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" +
+          encodeURIComponent(inviteLink);
+
+        const heroStyle = {
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+        };
+        const accentStyle = { color: theme };
+        const accentBgStyle = {
+          background: theme,
+          boxShadow: `0 14px 32px ${theme}99`,
+        };
+
+        return (
+          <div className="main" onClick={ensureMusic}>
+            <div className="hero-wrapper">
+              <div
+                className="hero-3d"
+                ref={heroRef}
+                style={heroStyle}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="hero-bg">
+                  <img src={heroImage} alt="Hero" />
+                </div>
+                <div className="hero-overlay" />
+                <div className="hero">
+                  <div className="hero-pill">
+                    <span>{displayDate}</span>
+                    <span>•</span>
+                    <span>{location}</span>
+                  </div>
+                  <h1>
+                    {bride} &amp; {groom}
+                  </h1>
+                  <div className="hero-sub">You are invited to celebrate.</div>
+                  <p className="hero-text">{welcome}</p>
+
+                  <div className="countdown">
+                    <div className="count-card">
+                      <div className="count-value">{countdown.days}</div>
+                      <div>Days</div>
+                    </div>
+                    <div className="count-card">
+                      <div className="count-value">{countdown.hours}</div>
+                      <div>Hours</div>
+                    </div>
+                    <div className="count-card">
+                      <div className="count-value">{countdown.mins}</div>
+                      <div>Minutes</div>
+                    </div>
+                    <div className="count-card">
+                      <div className="count-value">{countdown.secs}</div>
+                      <div>Seconds</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <section>
+              <h3>Our Story</h3>
+              <p className="section-sub">
+                Two paths crossed, countless memories were made, and now we are
+                ready to say “yes” to forever.
+              </p>
+              <p>
+                We want this day to feel warm, joyful and very us — full of
+                laughter, blessings, and little moments that become big
+                memories. Your presence is what will make it truly special.
+              </p>
+            </section>
+
+            <section>
+              <h3>The Day</h3>
+              <p className="section-sub">
+                A simple flow so you know what to expect.
+              </p>
+              <div className="grid">
+                <div className="card">
+                  <div className="label" style={accentStyle}>
+                    Timeline
+                  </div>
+                  <div className="timeline">
+                    <div className="timeline-item">
+                      <div className="timeline-time">09:30 AM</div>
+                      <div className="timeline-title">Welcome & Arrival</div>
+                      <div className="timeline-desc">
+                        Greetings, seating and light refreshments.
+                      </div>
+                    </div>
+                    <div className="timeline-item">
+                      <div className="timeline-time">10:00 AM</div>
+                      <div className="timeline-title">Wedding Ceremony</div>
+                      <div className="timeline-desc">
+                        Rituals, prayers and promises for a lifetime.
+                      </div>
+                    </div>
+                    <div className="timeline-item">
+                      <div className="timeline-time">01:00 PM</div>
+                      <div className="timeline-title">Lunch</div>
+                      <div className="timeline-desc">
+                        A curated meal shared with all our favourite people.
+                      </div>
+                    </div>
+                    <div className="timeline-item">
+                      <div className="timeline-time">07:00 PM</div>
+                      <div className="timeline-title">
+                        Reception & Celebration
+                      </div>
+                      <div className="timeline-desc">
+                        Music, photos, dancing and late-night stories.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="label" style={accentStyle}>
+                    RSVP & Share
+                  </div>
+                  <p>
+                    Let us know you’re coming and feel free to share this invite
+                    with family and friends.
+                  </p>
+                  <button
+                    className="rsvp-btn"
+                    onClick={handleRsvpClick}
+                    style={accentBgStyle}
+                  >
+                    <span>💌</span>
+                    <span>RSVP via WhatsApp</span>
+                  </button>
+
+                  <div className="share-row">
+                    <button className="share-btn" onClick={handleShareWhatsApp}>
+                      🟢 WhatsApp
+                    </button>
+                    <button className="share-btn" onClick={handleShareTelegram}>
+                      📨 Telegram
+                    </button>
+                  </div>
+
+                  <div className="qr-wrap">
+                    <img src={qrSrc} alt="Invitation QR" />
+                    <div className="qr-text">
+                      Scan to open this invitation page directly in your
+                      browser.
+                    </div>
+                  </div>
+
+                  <div className="music-box" style={{ marginTop: 18 }}>
+                    <div className="music-header">
+                      <span>Background music</span>
+                      <span className="music-tag">plays after tap</span>
+                    </div>
+                    <div className="section-sub">
+                      Enjoy this track while viewing the invitation.
+                    </div>
+                    <audio
+                      ref={audioRef}
+                      src="https://cdn.pixabay.com/audio/2021/09/30/audio_b4b5c1c8b4.mp3"
+                      controls
+                      loop
+                      style={{ marginTop: 6, width: "100%" }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h3>Gallery</h3>
+              <p className="section-sub">
+                A small preview of all the big feelings.
+              </p>
+              <div className="gallery">
+                <div className="gallery-item">
+                  <img src={heroImage} alt="Gallery 1" />
+                  <div className="gallery-label">Ceremony</div>
+                </div>
+                <div className="gallery-item">
+                  <img src={heroImage} alt="Gallery 2" />
+                  <div className="gallery-label">Together</div>
+                </div>
+                <div className="gallery-item">
+                  <img src={heroImage} alt="Gallery 3" />
+                  <div className="gallery-label">Celebration</div>
+                </div>
+              </div>
+            </section>
+
+            <footer>
+              Crafted with love · This page is the invitation linked from
+              WhatsApp & QR.
+            </footer>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<InviteApp />);
+    </script>
+  </body>
+</html>
