@@ -39,7 +39,7 @@
         padding: 16px 14px;
         border-right: 1px solid #e4d7ea;
         background: #ffffffe6;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(12px);
         box-shadow: 0 0 24px rgba(0, 0, 0, 0.05);
         position: sticky;
         top: 0;
@@ -101,6 +101,76 @@
         border-top: 1px dashed #e0d2eb;
         margin: 10px 0;
       }
+
+      .upload-card {
+        margin-top: 4px;
+        border-radius: 14px;
+        border: 1px dashed #d5c4ec;
+        background: radial-gradient(circle at top left, #fdf4ff 0, #ffffff 40%);
+        padding: 10px;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+        transition: box-shadow 0.2s, transform 0.1s, border-color 0.2s;
+      }
+      .upload-card:hover {
+        box-shadow: 0 10px 26px rgba(91, 36, 122, 0.18);
+        transform: translateY(-1px);
+        border-color: #c47b9b;
+      }
+      .upload-card.drag-over {
+        border-style: solid;
+        border-color: #c47b9b;
+        box-shadow: 0 0 0 2px #c47b9b44;
+      }
+      .upload-inner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .upload-icon-wrap {
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f9e3ff;
+        animation: floatIcon 2s ease-in-out infinite;
+      }
+      .upload-icon {
+        font-size: 18px;
+      }
+      .upload-text-main {
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .upload-text-sub {
+        font-size: 0.7rem;
+        color: #777;
+      }
+      .upload-pill {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid #e2d3ff;
+        background: #faf7ff;
+        margin-left: auto;
+        white-space: nowrap;
+      }
+      .upload-hidden-input {
+        display: none;
+      }
+      @keyframes floatIcon {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+
       .main {
         flex: 1;
         padding: 24px 18px;
@@ -126,6 +196,7 @@
         height: 100%;
         object-fit: cover;
         filter: brightness(0.35) saturate(1.2);
+        transform: scale(1.02);
       }
       .preview-overlay {
         position: absolute;
@@ -171,7 +242,7 @@
         opacity: 0.9;
       }
       .invite-box {
-        margin-top: 10px;
+        margin-top: 6px;
         padding: 10px;
         border-radius: 14px;
         background: #fbf8ff;
@@ -197,6 +268,11 @@
         background: #c47b9b;
         color: #fff;
         box-shadow: 0 10px 24px rgba(196, 123, 155, 0.7);
+        transition: transform 0.1s, box-shadow 0.1s;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 13px 30px rgba(196, 123, 155, 0.85);
       }
       .btn-outline {
         padding: 8px 14px;
@@ -206,6 +282,36 @@
         border: 1px solid #dac5f0;
         background: #fff;
       }
+
+      .music-preview {
+        margin-top: 8px;
+        background: #fff;
+        border-radius: 14px;
+        padding: 10px;
+        box-shadow: 0 10px 24px rgba(26, 9, 53, 0.12);
+      }
+      .music-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+      .music-label-main {
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .music-label-sub {
+        font-size: 0.7rem;
+        color: #777;
+      }
+      .music-pill {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #f4e0ff;
+        color: #7a429e;
+      }
+
       @media (max-width: 880px) {
         body {
           flex-direction: column;
@@ -275,10 +381,14 @@
           "We are delighted to invite you to celebrate our special day with us."
         );
         const [theme, setTheme] = useState("#c47b9b");
-        const [heroImage, setHeroImage] = useState(
+        const [heroImageUrl, setHeroImageUrl] = useState(
           "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
         );
         const [phone, setPhone] = useState("919019823918");
+
+        // Local previews (from uploads)
+        const [heroPreview, setHeroPreview] = useState(null);
+        const [musicPreview, setMusicPreview] = useState(null);
 
         const inviteUrl = useMemo(
           () =>
@@ -290,9 +400,9 @@
               welcome,
               theme,
               phone,
-              heroImage,
+              heroImage: heroImageUrl,
             }),
-          [bride, groom, date, location, welcome, theme, phone, heroImage]
+          [bride, groom, date, location, welcome, theme, phone, heroImageUrl]
         );
 
         function handleCopy() {
@@ -332,6 +442,55 @@
               day: "numeric",
             })
           : "Our Wedding Day";
+
+        // ----- drag & drop helpers -----
+        function makeUploadHandlers(onFile) {
+          let over = false;
+          const handleDrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            over = false;
+            e.currentTarget.classList.remove("drag-over");
+            const file = e.dataTransfer.files?.[0];
+            if (file) onFile(file);
+          };
+          const handleDragOver = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!over) {
+              over = true;
+              e.currentTarget.classList.add("drag-over");
+            }
+          };
+          const handleDragLeave = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            over = false;
+            e.currentTarget.classList.remove("drag-over");
+          };
+          return { handleDrop, handleDragOver, handleDragLeave };
+        }
+
+        function handleHeroFile(file) {
+          if (!file.type.startsWith("image/")) {
+            alert("Please upload an image file.");
+            return;
+          }
+          const url = URL.createObjectURL(file);
+          setHeroPreview(url);
+        }
+
+        function handleMusicFile(file) {
+          if (!file.type.startsWith("audio/")) {
+            alert("Please upload an audio file (MP3/WAV).");
+            return;
+          }
+          const url = URL.createObjectURL(file);
+          setMusicPreview(url);
+        }
+
+        const heroUploadHandlers = makeUploadHandlers(handleHeroFile);
+        const musicUploadHandlers = makeUploadHandlers(handleMusicFile);
 
         return (
           <div className="app">
@@ -395,18 +554,127 @@
                 />
               </div>
 
+              <hr className="divider" />
+
+              {/* HERO UPLOAD */}
               <div className="field">
-                <label>Hero image URL</label>
+                <label>Hero photo (preview upload)</label>
+                <div
+                  className="upload-card"
+                  onClick={() =>
+                    document.getElementById("heroUploadInput").click()
+                  }
+                  onDrop={heroUploadHandlers.handleDrop}
+                  onDragOver={heroUploadHandlers.handleDragOver}
+                  onDragLeave={heroUploadHandlers.handleDragLeave}
+                >
+                  <div className="upload-inner">
+                    <div className="upload-icon-wrap">
+                      <span className="upload-icon">📷</span>
+                    </div>
+                    <div>
+                      <div className="upload-text-main">
+                        Drag & drop or click to choose
+                      </div>
+                      <div className="upload-text-sub">
+                        Only for your live preview and screenshots.
+                      </div>
+                    </div>
+                    <div className="upload-pill">Local preview</div>
+                  </div>
+                </div>
                 <input
-                  value={heroImage}
-                  onChange={(e) => setHeroImage(e.target.value)}
+                  id="heroUploadInput"
+                  type="file"
+                  accept="image/*"
+                  className="upload-hidden-input"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleHeroFile(file);
+                  }}
+                />
+                <span className="hint">
+                  For guests, use a public link below (Pexels, Drive, etc.).
+                </span>
+              </div>
+
+              <div className="field">
+                <label>Hero image URL (used for guests)</label>
+                <input
+                  value={heroImageUrl}
+                  onChange={(e) => setHeroImageUrl(e.target.value)}
                   placeholder="https://..."
                 />
                 <span className="hint">
-                  Paste an image URL (e.g. from Pexels). This shows on invite
-                  + preview.
+                  This URL is stored inside the invite link and is what guests
+                  will see.
                 </span>
               </div>
+
+              <hr className="divider" />
+
+              {/* MUSIC UPLOAD */}
+              <div className="field">
+                <label>Background music (preview upload)</label>
+                <div
+                  className="upload-card"
+                  onClick={() =>
+                    document.getElementById("musicUploadInput").click()
+                  }
+                  onDrop={musicUploadHandlers.handleDrop}
+                  onDragOver={musicUploadHandlers.handleDragOver}
+                  onDragLeave={musicUploadHandlers.handleDragLeave}
+                >
+                  <div className="upload-inner">
+                    <div className="upload-icon-wrap">
+                      <span className="upload-icon">🎵</span>
+                    </div>
+                    <div>
+                      <div className="upload-text-main">
+                        Drag & drop or click to add music
+                      </div>
+                      <div className="upload-text-sub">
+                        Plays only in your editor preview (guests still hear
+                        default track).
+                      </div>
+                    </div>
+                    <div className="upload-pill">Audio preview</div>
+                  </div>
+                </div>
+                <input
+                  id="musicUploadInput"
+                  type="file"
+                  accept="audio/*"
+                  className="upload-hidden-input"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleMusicFile(file);
+                  }}
+                />
+              </div>
+
+              <div className="music-preview">
+                <div className="music-row">
+                  <div>
+                    <div className="music-label-main">Preview music</div>
+                    <div className="music-label-sub">
+                      If none uploaded, a default soft track is used.
+                    </div>
+                  </div>
+                  <div className="music-pill">live only</div>
+                </div>
+                <audio
+                  controls
+                  loop
+                  style={{ width: "100%", marginTop: "6px" }}
+                  src={
+                    musicPreview ||
+                    "https://cdn.pixabay.com/audio/2021/09/30/audio_b4b5c1c8b4.mp3"
+                  }
+                />
+              </div>
+
+              <hr className="divider" />
 
               <div className="field">
                 <label>RSVP WhatsApp number</label>
@@ -448,7 +716,7 @@
                   </button>
                 </div>
                 <span className="hint">
-                  These will share the invite link. Guests click → invitation
+                  These share the invite link. Guests tap → your /invite.html
                   card opens.
                 </span>
               </div>
@@ -457,12 +725,19 @@
             <main className="main">
               <h2>Live Invitation Preview</h2>
               <p style={{ fontSize: "0.82rem", color: "#666", marginTop: 4 }}>
-                This is approximately how the /invite.html page will look for
-                your guests.
+                This mirrors what guests see on /invite.html (hero/photo +
+                text). Local uploads change this preview only.
               </p>
               <div className="preview-card">
                 <div className="preview-bg">
-                  <img src={heroImage} alt="Preview" />
+                  <img
+                    src={heroPreview || heroImageUrl}
+                    alt="Preview"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg";
+                    }}
+                  />
                 </div>
                 <div className="preview-overlay" />
                 <div className="preview-content">
