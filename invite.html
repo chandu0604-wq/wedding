@@ -1,671 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Wedding Invitation</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Wedding Invitation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Static OG tags (you can tweak text & image) -->
-    <meta property="og:title" content="Wedding Invitation" />
-    <meta
-      property="og:description"
-      content="You are warmly invited to celebrate this special day. Tap to view the full invitation."
-    />
-    <meta
-      property="og:image"
-      content="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
-    />
-    <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#c47b9b" />
+  <style>
+    :root {
+      --bg: #faf4ee;
+      --card: #ffffff;
+      --accent: #c47b9b;
+      --border: #e7dcd5;
+      --radius: 16px;
+      --shadow: 0 10px 28px rgba(0,0,0,0.08);
+    }
 
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        background: radial-gradient(
-          circle at top,
-          #fde7f2 0,
-          #f8f3ff 30%,
-          #faf7f5 60%,
-          #f3f3f3 100%
-        );
-        color: #222;
-        min-height: 100vh;
-        display: flex;
-      }
-      #root {
-        flex: 1;
-        display: flex;
-      }
-      .main {
-        flex: 1;
-        overflow-y: auto;
-        perspective: 1400px;
-      }
-      .hero-wrapper {
-        padding: 40px 16px 0;
-      }
-      .hero-3d {
-        position: relative;
-        border-radius: 28px;
-        overflow: hidden;
-        transform-style: preserve-3d;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 26px 60px rgba(18, 8, 41, 0.6);
-      }
-      .hero-bg {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-        z-index: -2;
-      }
-      .hero-bg img {
-        width: 110%;
-        height: 110%;
-        object-fit: cover;
-        filter: brightness(0.35) saturate(1.2);
-        transform: translateZ(-60px) scale(1.1);
-      }
-      .hero-overlay {
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-            circle at top,
-            #ffffff11 0,
-            transparent 45%
-          ),
-          linear-gradient(to bottom, #050513b3, #010106f0, #000000aa);
-        z-index: -1;
-      }
-      .hero {
-        padding: 80px 22px 40px;
-        text-align: center;
-        color: #fff;
-        transform-style: preserve-3d;
-      }
-      .hero-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 7px 16px;
-        border-radius: 999px;
-        border: 1px solid #ffffff55;
-        background: #ffffff15;
-        backdrop-filter: blur(6px);
-        font-size: 0.82rem;
-        transform: translateZ(30px);
-      }
-      .hero h1 {
-        font-size: 2.7rem;
-        letter-spacing: 2px;
-        margin: 10px 0 4px;
-        text-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
-        transform: translateZ(40px);
-      }
-      .hero-sub {
-        font-size: 1rem;
-        opacity: 0.95;
-        transform: translateZ(30px);
-      }
-      .hero-text {
-        margin-top: 10px;
-        font-size: 0.9rem;
-        max-width: 640px;
-        margin-left: auto;
-        margin-right: auto;
-        opacity: 0.9;
-        transform: translateZ(25px);
-      }
-      .countdown {
-        margin-top: 18px;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        transform: translateZ(35px);
-      }
-      .count-card {
-        min-width: 70px;
-        padding: 8px 10px;
-        border-radius: 14px;
-        background: #ffffff1f;
-        border: 1px solid #ffffff3a;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-        font-size: 0.8rem;
-        backdrop-filter: blur(8px);
-      }
-      .count-value {
-        font-size: 1.35rem;
-        font-weight: 600;
-      }
-      section {
-        padding: 30px 18px 0;
-        max-width: 1120px;
-        margin: 0 auto;
-      }
-      h3 {
-        font-size: 1.5rem;
-        margin-bottom: 6px;
-      }
-      .section-sub {
-        font-size: 0.88rem;
-        color: #777;
-        margin-bottom: 14px;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 22px;
-      }
-      .card {
-        background: #fff;
-        border-radius: 20px;
-        padding: 16px 15px;
-        box-shadow: 0 16px 40px rgba(20, 6, 50, 0.12);
-        position: relative;
-        overflow: hidden;
-      }
-      .label {
-        font-size: 0.75rem;
-        color: #9964b3;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        margin-bottom: 4px;
-      }
-      .timeline {
-        border-left: 2px solid #e2c9f3;
-        margin-top: 6px;
-        padding-left: 14px;
-      }
-      .timeline-item {
-        margin-bottom: 12px;
-        position: relative;
-      }
-      .timeline-item::before {
-        content: "";
-        position: absolute;
-        left: -15px;
-        top: 5px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #c47b9b;
-        box-shadow: 0 0 0 4px #f5d5e6;
-      }
-      .timeline-time {
-        font-size: 0.8rem;
-        color: #999;
-      }
-      .timeline-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-      }
-      .timeline-desc {
-        font-size: 0.83rem;
-      }
-      .rsvp-btn {
-        margin-top: 12px;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 999px;
-        background: #c47b9b;
-        color: #fff;
-        font-size: 0.92rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        box-shadow: 0 14px 32px rgba(196, 123, 155, 0.7);
-        transition: transform 0.12s, box-shadow 0.12s;
-      }
-      .rsvp-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 40px rgba(196, 123, 155, 0.9);
-      }
-      .share-row {
-        margin-top: 13px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .share-btn {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid #dac5f0;
-        background: #fff;
-        font-size: 0.8rem;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        transition: background 0.15s, transform 0.1s;
-      }
-      .share-btn:hover {
-        background: #f6ecff;
-      }
-      .qr-wrap {
-        margin-top: 16px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        align-items: center;
-      }
-      .qr-wrap img {
-        width: 150px;
-        height: 150px;
-        border-radius: 16px;
-        border: 1px solid #eee;
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
-        background: #fff;
-      }
-      .qr-text {
-        font-size: 0.8rem;
-        color: #666;
-        max-width: 260px;
-      }
-      .gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-        gap: 14px;
-        margin-top: 8px;
-      }
-      .gallery-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 20px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-      }
-      .gallery-item img {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-      }
-      .gallery-item::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to top,
-          rgba(0, 0, 0, 0.5),
-          transparent 55%
-        );
-        opacity: 0.85;
-        pointer-events: none;
-      }
-      .gallery-label {
-        position: absolute;
-        left: 12px;
-        bottom: 10px;
-        color: #fff;
-        font-size: 0.8rem;
-        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
-      }
-      footer {
-        text-align: center;
-        padding: 22px 10px 26px;
-        font-size: 0.8rem;
-        color: #777;
-      }
-      @media (max-width: 880px) {
-        body {
-          flex-direction: column;
-        }
-        .hero-wrapper {
-          padding-top: 20px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      font-family: system-ui, sans-serif;
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    .container {
+      max-width: 900px;
+      margin: auto;
+      box-shadow: var(--shadow);
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: fadeInPage 0.6s ease;
+    }
 
-    <script type="text/babel">
-      const { useState, useEffect, useRef } = React;
+    @keyframes fadeInPage {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-      function getParams() {
-        const p = new URLSearchParams(window.location.search);
-        return {
-          bride: p.get("bride") || "Bride",
-          groom: p.get("groom") || "Groom",
-          date: p.get("date") || "",
-          location: p.get("location") || "Venue",
-          welcome:
-            p.get("welcome") ||
-            "We are delighted to invite you to celebrate our special day with us.",
-          theme: p.get("theme") || "#c47b9b",
-          phone: p.get("phone") || "",
-          heroImage:
-            p.get("heroImage") ||
-            "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg",
-        };
-      }
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 380px;
+      overflow: hidden;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: fadeHero 1s ease;
+    }
+    @keyframes fadeHero {
+      from { opacity: 0; transform: scale(1.05); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
-      function siteUrl() {
-        return window.location.href.split("#")[0];
-      }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.35),
+        rgba(0,0,0,0.85)
+      );
+    }
 
-      function InviteApp() {
-        const { bride, groom, date, location, welcome, theme, phone, heroImage } =
-          getParams();
+    .hero-content {
+      position: absolute;
+      bottom: 0;
+      padding: 40px 28px;
+      width: 100%;
+      color: #fff;
+    }
 
-        const [tilt, setTilt] = useState({ x: 0, y: 0 });
-        const heroRef = useRef(null);
+    .hero-names {
+      font-size: 2.6rem;
+      font-weight: 600;
+      text-shadow: 0 8px 20px #0006;
+      letter-spacing: 1px;
+    }
 
-        function handleMouseMove(e) {
-          const rect = heroRef.current?.getBoundingClientRect();
-          if (!rect) return;
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-          setTilt({ x: y * -10, y: x * 10 });
-        }
-        function handleMouseLeave() {
-          setTilt({ x: 0, y: 0 });
-        }
+    .hero-sub {
+      margin-top: 6px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
 
-        const [countdown, setCountdown] = useState({
-          days: "--",
-          hours: "--",
-          mins: "--",
-          secs: "--",
-        });
+    /* SECTION */
+    .section {
+      padding: 30px 26px;
+      animation: sectionFade 0.8s ease;
+    }
 
-        useEffect(() => {
-          if (!date) return;
-          const target = new Date(date);
-          function tick() {
-            const now = new Date();
-            const diff = target - now;
-            if (diff <= 0) {
-              setCountdown({ days: 0, hours: 0, mins: 0, secs: 0 });
-              return;
-            }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const mins = Math.floor((diff / (1000 * 60)) % 60);
-            const secs = Math.floor((diff / 1000) % 60);
-            setCountdown({ days, hours, mins, secs });
-          }
-          tick();
-          const id = setInterval(tick, 1000);
-          return () => clearInterval(id);
-        }, [date]);
+    @keyframes sectionFade {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        const audioRef = useRef(null);
-        const [hasInteracted, setHasInteracted] = useState(false);
-        function ensureMusic() {
-          if (hasInteracted) return;
-          setHasInteracted(true);
-          audioRef.current?.play().catch(() => {});
-        }
-        useEffect(() => {
-          window.addEventListener("click", ensureMusic, { once: true });
-          window.addEventListener("touchstart", ensureMusic, { once: true });
-          return () => {
-            window.removeEventListener("click", ensureMusic);
-            window.removeEventListener("touchstart", ensureMusic);
-          };
-        }, []);
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
 
-        let displayDate = "Our Wedding Day";
-        if (date) {
-          const d = new Date(date);
-          displayDate = d.toLocaleDateString(undefined, {
+    .section-sub {
+      font-size: 0.85rem;
+      color: #7a6f69;
+      margin-bottom: 12px;
+    }
+
+    .section-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #4d4742;
+    }
+
+    /* GALLERY */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      animation: galleryFade 0.6s ease;
+    }
+
+    @keyframes galleryFade {
+      from { opacity: 0; transform: scale(1.03); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* RSVP */
+    .rsvp-btn {
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 16px;
+      box-shadow: 0 12px 32px rgba(196,123,155,0.55);
+      transition: 0.25s;
+    }
+    .rsvp-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(196,123,155,0.75);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.8rem;
+      color: #7a6f69;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="inviteContainer">
+
+    <!-- HERO -->
+    <div class="hero">
+      <img id="heroImage" src="" alt="Hero" />
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <div class="hero-names" id="namesBox">Bride & Groom</div>
+        <div class="hero-sub" id="detailsBox"></div>
+      </div>
+    </div>
+
+    <!-- STORY -->
+    <div class="section">
+      <div class="section-title">Our Story</div>
+      <div class="section-sub">A small glimpse of our journey.</div>
+      <div class="section-text" id="welcomeText"></div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="section">
+      <div class="section-title">Gallery</div>
+      <div class="section-sub">Captured moments.</div>
+
+      <div class="gallery" id="galleryBox"></div>
+    </div>
+
+    <!-- RSVP -->
+    <div class="section" style="text-align:center;">
+      <button class="rsvp-btn" id="rsvpButton">💌 RSVP via WhatsApp</button>
+    </div>
+
+    <footer>
+      Created with ❤️ · A beautiful modern wedding invitation
+    </footer>
+
+  </div>
+
+  <!-- MUSIC -->
+  <audio id="musicPlayer" autoplay loop></audio>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const bride = params.get("bride") || "Bride";
+    const groom = params.get("groom") || "Groom";
+    const date = params.get("date") || "";
+    const locationText = params.get("location") || "";
+    const welcome = params.get("welcome") || "";
+    const hero = params.get("hero") || "";
+
+    const galleryImages = [
+      params.get("g1"),
+      params.get("g2"),
+      params.get("g3"),
+      params.get("g4"),
+    ].filter(Boolean);
+
+    const music = params.get("music") || "";
+
+    document.getElementById("heroImage").src = hero || "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg";
+
+    document.getElementById("namesBox").innerText = `${bride} & ${groom}`;
+
+    if (date || locationText) {
+      let d = date
+        ? new Date(date).toLocaleDateString(undefined, {
             weekday: "long",
             year: "numeric",
             month: "long",
             day: "numeric",
-          });
-        }
+          })
+        : "";
+      document.getElementById("detailsBox").innerText =
+        d + (locationText ? " • " + locationText : "");
+    }
 
-        const inviteLink = siteUrl();
+    document.getElementById("welcomeText").innerText = welcome;
 
-        function rsvpUrl() {
-          const msg = `Hi! I would like to RSVP for the wedding of ${bride} & ${groom}.\n\nInvitation: ${inviteLink}`;
-          if (phone) {
-            return `https://wa.me/${encodeURIComponent(
-              phone
-            )}?text=${encodeURIComponent(msg)}`;
-          }
-          return `https://wa.me/?text=${encodeURIComponent(msg)}`;
-        }
+    const galleryBox = document.getElementById("galleryBox");
+    galleryImages.forEach((url) => {
+      const img = document.createElement("img");
+      img.src = url;
+      galleryBox.appendChild(img);
+    });
 
-        function handleRsvpClick() {
-          window.open(rsvpUrl(), "_blank");
-        }
+    // MUSIC
+    if (music) {
+      document.getElementById("musicPlayer").src = music;
+    }
 
-        function shareText() {
-          return `You are invited to the wedding of ${bride} & ${groom} at ${location}. Tap to view the full invitation: ${inviteLink}`;
-        }
+    // RSVP BUTTON
+    const rsvpNumber = "91" + "9019823918"; // your number
 
-        function handleShareWhatsApp() {
-          const text = shareText();
-          window.open(
-            `https://wa.me/?text=${encodeURIComponent(text)}`,
-            "_blank"
-          );
-        }
-
-        function handleShareTelegram() {
-          const text = encodeURIComponent(shareText());
-          const url = encodeURIComponent(inviteLink);
-          window.open(
-            `https://t.me/share/url?url=${url}&text=${text}`,
-            "_blank"
-          );
-        }
-
-        const qrSrc =
-          "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" +
-          encodeURIComponent(inviteLink);
-
-        const heroStyle = {
-          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-        };
-        const accentStyle = { color: theme };
-        const accentBgStyle = {
-          background: theme,
-          boxShadow: `0 14px 32px ${theme}99`,
-        };
-
-        return (
-          <div className="main" onClick={ensureMusic}>
-            <div className="hero-wrapper">
-              <div
-                className="hero-3d"
-                ref={heroRef}
-                style={heroStyle}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="hero-bg">
-                  <img src={heroImage} alt="Hero" />
-                </div>
-                <div className="hero-overlay" />
-                <div className="hero">
-                  <div className="hero-pill">
-                    <span>{displayDate}</span>
-                    <span>•</span>
-                    <span>{location}</span>
-                  </div>
-                  <h1>
-                    {bride} &amp; {groom}
-                  </h1>
-                  <div className="hero-sub">You are invited to celebrate.</div>
-                  <p className="hero-text">{welcome}</p>
-
-                  <div className="countdown">
-                    <div className="count-card">
-                      <div className="count-value">{countdown.days}</div>
-                      <div>Days</div>
-                    </div>
-                    <div className="count-card">
-                      <div className="count-value">{countdown.hours}</div>
-                      <div>Hours</div>
-                    </div>
-                    <div className="count-card">
-                      <div className="count-value">{countdown.mins}</div>
-                      <div>Minutes</div>
-                    </div>
-                    <div className="count-card">
-                      <div className="count-value">{countdown.secs}</div>
-                      <div>Seconds</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <section>
-              <h3>Our Story</h3>
-              <p className="section-sub">
-                Two paths crossed, countless memories were made, and now we are
-                ready to say “yes” to forever.
-              </p>
-              <p>
-                We want this day to feel warm, joyful and very us — full of
-                laughter, blessings, and little moments that become big
-                memories. Your presence is what will make it truly special.
-              </p>
-            </section>
-
-            <section>
-              <h3>The Day</h3>
-              <p className="section-sub">
-                A simple flow so you know what to expect.
-              </p>
-              <div className="grid">
-                <div className="card">
-                  <div className="label" style={accentStyle}>
-                    Timeline
-                  </div>
-                  <div className="timeline">
-                    <div className="timeline-item">
-                      <div className="timeline-time">09:30 AM</div>
-                      <div className="timeline-title">Welcome & Arrival</div>
-                      <div className="timeline-desc">
-                        Greetings, seating and light refreshments.
-                      </div>
-                    </div>
-                    <div className="timeline-item">
-                      <div className="timeline-time">10:00 AM</div>
-                      <div className="timeline-title">Wedding Ceremony</div>
-                      <div className="timeline-desc">
-                        Rituals, prayers and promises for a lifetime.
-                      </div>
-                    </div>
-                    <div className="timeline-item">
-                      <div className="timeline-time">01:00 PM</div>
-                      <div className="timeline-title">Lunch</div>
-                      <div className="timeline-desc">
-                        A curated meal shared with all our favourite people.
-                      </div>
-                    </div>
-                    <div className="timeline-item">
-                      <div className="timeline-time">07:00 PM</div>
-                      <div className="timeline-title">
-                        Reception & Celebration
-                      </div>
-                      <div className="timeline-desc">
-                        Music, photos, dancing and late-night stories.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="label" style={accentStyle}>
-                    RSVP & Share
-                  </div>
-                  <p>
-                    Let us know you’re coming and feel free to share this invite
-                    with family and friends.
-                  </p>
-                  <button
-                    className="rsvp-btn"
-                    onClick={handleRsvpClick}
-                    style={accentBgStyle}
-                  >
-                    <span>💌</span>
-                    <span>RSVP via WhatsApp</span>
-                  </button>
-
-                  <div className="share-row">
-                    <button className="share-btn" onClick={handleShareWhatsApp}>
-                      🟢 WhatsApp
-                    </button>
-                    <button className="share-btn" onClick={handleShareTelegram}>
-                      📨 Telegram
-                    </button>
-                  </div>
-
-                  <div className="qr-wrap">
-                    <img src={qrSrc} alt="Invitation QR" />
-                    <div className="qr-text">
-                      Scan to open this invitation page directly in your
-                      browser.
-                    </div>
-                  </div>
-
-                  <div className="music-box" style={{ marginTop: 18 }}>
-                    <div className="music-header">
-                      <span>Background music</span>
-                      <span className="music-tag">plays after tap</span>
-                    </div>
-                    <div className="section-sub">
-                      Enjoy this track while viewing the invitation.
-                    </div>
-                    <audio
-                      ref={audioRef}
-                      src="https://cdn.pixabay.com/audio/2021/09/30/audio_b4b5c1c8b4.mp3"
-                      controls
-                      loop
-                      style={{ marginTop: 6, width: "100%" }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h3>Gallery</h3>
-              <p className="section-sub">
-                A small preview of all the big feelings.
-              </p>
-              <div className="gallery">
-                <div className="gallery-item">
-                  <img src={heroImage} alt="Gallery 1" />
-                  <div className="gallery-label">Ceremony</div>
-                </div>
-                <div className="gallery-item">
-                  <img src={heroImage} alt="Gallery 2" />
-                  <div className="gallery-label">Together</div>
-                </div>
-                <div className="gallery-item">
-                  <img src={heroImage} alt="Gallery 3" />
-                  <div className="gallery-label">Celebration</div>
-                </div>
-              </div>
-            </section>
-
-            <footer>
-              Crafted with love · This page is the invitation linked from
-              WhatsApp & QR.
-            </footer>
-          </div>
-        );
-      }
-
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<InviteApp />);
-    </script>
-  </body>
+    document.getElementById("rsvpButton").onclick = () => {
+      const msg = `Hi! I would like to RSVP for the wedding of ${bride} & ${groom}.`;
+      window.open(
+        "https://wa.me/" + rsvpNumber + "?text=" + encodeURIComponent(msg),
+        "_blank"
+      );
+    };
+  </script>
+</body>
 </html>
