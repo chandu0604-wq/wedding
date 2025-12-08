@@ -2,195 +2,369 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Wedding Invitation Editor</title>
+    <title>Wedding Invitation Editor – Luxury Glow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <style>
       :root {
-        --bg: #faf4ee;
-        --card: #ffffff;
-        --accent: #c47b9b;
-        --border: #e7dcd5;
-        --radius: 16px;
-        --shadow: 0 10px 28px rgba(0,0,0,0.08);
-        --text-light: #7a6f69;
+        --bg1: #1b0a0a;
+        --bg2: #3b0b0b;
+        --accent: #d24b3a; /* saffron-red */
+        --accent-soft: #ff9f7c;
+        --card: #1f1414;
+        --card-soft: #291515;
+        --border: #ffb8a6;
+        --radius: 18px;
+        --shadow: 0 20px 45px rgba(0,0,0,0.7);
+        --text-light: #dac1b4;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
-        font-family: system-ui, sans-serif;
-        display: flex;
-        background: var(--bg);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         min-height: 100vh;
-        color: #333;
+        display: flex;
+        color: #fdf4ec;
+        background: radial-gradient(circle at top left, #ffefda 0, #2a0909 40%, #080204 100%);
+        overflow: hidden;
       }
       #root { flex: 1; display: flex; }
+
+      /* Background particles / rays */
+      .bg-orbs::before,
+      .bg-orbs::after {
+        content: "";
+        position: fixed;
+        width: 520px;
+        height: 520px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffb88a44 0, transparent 65%);
+        filter: blur(4px);
+        z-index: -2;
+        animation: orbFloat 18s linear infinite;
+      }
+      .bg-orbs::before {
+        top: -120px;
+        left: -120px;
+      }
+      .bg-orbs::after {
+        bottom: -160px;
+        right: -120px;
+        animation-delay: -6s;
+      }
+      @keyframes orbFloat {
+        0% { transform: translate3d(0,0,0); opacity: 0.6; }
+        50% { transform: translate3d(40px,-20px,0); opacity: 0.9; }
+        100% { transform: translate3d(0,0,0); opacity: 0.6; }
+      }
+
+      .sparkles {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(circle at 20% 10%, #ffffff55 0, transparent 55%),
+          radial-gradient(circle at 80% 90%, #ffcba855 0, transparent 55%);
+        mix-blend-mode: screen;
+        opacity: 0.18;
+        z-index: -1;
+      }
 
       .editor-container {
         display: flex;
         width: 100%;
+        height: 100vh;
       }
 
-      /* LEFT PANEL */
+      /* Sidebar */
       .sidebar {
         width: 360px;
-        background: var(--card);
-        padding: 20px 18px;
-        border-right: 1px solid var(--border);
+        background: linear-gradient(145deg, #1a0808ee, #2a0a0aee);
+        border-right: 1px solid rgba(255, 184, 166, 0.18);
+        padding: 18px 16px;
         overflow-y: auto;
-        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
       }
-      .title {
-        font-size: 1.4rem;
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .brand-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 20%, #ffd9b5, #ff8147);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 12px #ffb48a;
+        font-size: 14px;
+      }
+      .brand-title {
+        font-size: 1.1rem;
         font-weight: 600;
-        margin-bottom: 4px;
+        letter-spacing: 0.05em;
       }
-      .subtitle {
-        font-size: 0.8rem;
+      .brand-sub {
+        font-size: 0.78rem;
         color: var(--text-light);
         margin-bottom: 14px;
       }
+
       .field {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 4px;
       }
       .field label {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 500;
       }
       .field input,
       .field textarea {
-        padding: 8px 10px;
-        font-size: 0.85rem;
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
-        background: #fff;
+        padding: 7px 10px;
+        font-size: 0.82rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 204, 178, 0.35);
+        background: #120606;
+        color: #ffe9dd;
         outline: none;
-        transition: 0.15s;
+        transition: 0.18s;
       }
       .field input:focus,
       .field textarea:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 2px #c47b9b33;
+        border-color: var(--accent-soft);
+        box-shadow: 0 0 0 1px rgba(255, 159, 124, 0.6);
       }
       .hint {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         color: var(--text-light);
       }
       .divider {
         height: 1px;
-        background: var(--border);
-        margin: 16px 0;
+        border: none;
+        background: radial-gradient(circle, #ffb89a66, transparent);
+        margin: 12px 0 14px;
       }
 
       .upload-area {
-        background: #fdf8f3;
-        border: 2px dashed #d8c8c0;
-        border-radius: var(--radius);
-        padding: 18px 14px;
-        text-align: center;
+        border-radius: 14px;
+        padding: 12px;
+        background: radial-gradient(circle at 0 0, #42201a, #190707 65%);
+        border: 1px dashed rgba(255, 188, 152, 0.7);
+        text-align: left;
         cursor: pointer;
-        transition: 0.25s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.2s;
       }
       .upload-area:hover {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 2px #c47b9b33;
         transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        border-style: solid;
       }
       .upload-icon {
-        font-size: 24px;
-        margin-bottom: 4px;
-        animation: float 2s infinite ease-in-out;
+        font-size: 22px;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: radial-gradient(circle, #ffb88a, #ff6d3a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 12px #ffb68a;
+        animation: float 2s ease-in-out infinite;
       }
       @keyframes float {
         0%,100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
+        50% { transform: translateY(-4px); }
       }
-      .hidden { display: none; }
+      .upload-text-main {
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .upload-text-sub {
+        font-size: 0.72rem;
+        color: var(--text-light);
+      }
+      .upload-pill {
+        margin-left: auto;
+        font-size: 0.68rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 200, 170, 0.7);
+        background: #2b0d0a;
+      }
+      .hidden-input { display: none; }
 
-      /* RIGHT PREVIEW */
+      .btn {
+        border-radius: 999px;
+        padding: 9px 14px;
+        border: none;
+        background: linear-gradient(135deg, #ff9c63, #ff5b3a);
+        color: #2c0502;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+        transition: 0.2s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+      }
+
+      .box {
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 193, 164, 0.7);
+        background: #120606;
+        font-size: 0.76rem;
+        word-break: break-all;
+        color: #ffe6d8;
+      }
+
+      /* Preview side */
       .preview-area {
         flex: 1;
-        padding: 24px;
+        padding: 22px;
         overflow-y: auto;
+        position: relative;
       }
-      .preview-card {
-        background: var(--card);
-        border-radius: var(--radius);
+      .preview-shell {
+        max-width: 980px;
+        margin: 0 auto;
+        border-radius: 26px;
         box-shadow: var(--shadow);
         overflow: hidden;
-        max-width: 960px;
-        margin: auto;
+        transform: translateZ(0);
+        backdrop-filter: blur(10px);
+        background: radial-gradient(circle at top, #3a1111ee, #130404f5);
+        position: relative;
       }
-      .hero-cover {
+      .preview-shell::before {
+        content: "";
+        position: absolute;
+        inset: -40%;
+        background:
+          radial-gradient(circle at 10% 0%, #ffddc144 0, transparent 60%),
+          radial-gradient(circle at 90% 100%, #ffb7a044 0, transparent 60%);
+        opacity: 0.7;
+        mix-blend-mode: screen;
+        pointer-events: none;
+      }
+
+      .hero {
         position: relative;
         height: 360px;
         overflow: hidden;
       }
-      .hero-cover img {
+      .hero img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        animation: fadeIn 0.8s ease;
+        transform: scale(1.05);
+        filter: saturate(1.2) contrast(1.05) brightness(0.9);
+        animation: heroZoom 16s ease-in-out infinite alternate;
       }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: scale(1.03); }
-        to { opacity: 1; transform: scale(1); }
+      @keyframes heroZoom {
+        0% { transform: scale(1.05) translate3d(0,0,0); }
+        100% { transform: scale(1.12) translate3d(0,-6px,0); }
       }
-      .hero-overlay {
+
+      .hero-gradient {
         position: absolute;
         inset: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.2),
-          rgba(0,0,0,0.85)
-        );
+        background:
+          radial-gradient(circle at 0% 0%, #ffffff15 0, transparent 50%),
+          radial-gradient(circle at 100% 20%, #ffd2a422 0, transparent 55%),
+          linear-gradient(to bottom, #00000040, #050101ea 60%, #050101ff);
       }
-      .hero-text-box {
+
+      .hero-rays {
         position: absolute;
-        bottom: 0;
-        padding: 40px 30px;
-        width: 100%;
-        color: #fff;
+        inset: -30%;
+        background:
+          conic-gradient(from 200deg, transparent 0 35%, #ffe6c955 40%, transparent 60%),
+          conic-gradient(from 120deg, transparent 0 50%, #ffb49a55 55%, transparent 80%);
+        mix-blend-mode: screen;
+        opacity: 0.5;
+        filter: blur(6px);
+        animation: raysSpin 28s linear infinite;
+      }
+      @keyframes raysSpin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .hero-content {
+        position: absolute;
+        inset: 0;
+        padding: 40px 32px 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: center;
+        color: #fffaf4;
       }
       .hero-pill {
         display: inline-flex;
         gap: 8px;
         padding: 6px 14px;
         border-radius: 999px;
-        border: 1px solid #ffffff55;
-        background: #ffffff22;
+        border: 1px solid #ffe9d899;
+        background: #130303aa;
+        backdrop-filter: blur(10px);
         font-size: 0.8rem;
         margin-bottom: 10px;
-        backdrop-filter: blur(6px);
       }
       .hero-names {
-        font-size: 2.5rem;
-        font-weight: 600;
-        text-shadow: 0 6px 20px #0005;
+        font-family: "Brush Script MT", "Lucida Handwriting", cursive;
+        font-size: 2.7rem;
+        letter-spacing: 0.08em;
+        text-shadow: 0 12px 30px rgba(0,0,0,0.9);
       }
       .hero-sub {
         margin-top: 6px;
-        font-size: 1rem;
+        font-size: 0.95rem;
         opacity: 0.95;
       }
 
       .section {
-        padding: 24px 24px 26px;
+        padding: 24px 26px 22px;
+        position: relative;
+      }
+      .section + .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 192, 158, 0.6),
+          transparent
+        );
+        opacity: 0.7;
       }
       .section-title {
-        font-size: 1.35rem;
+        font-size: 1.3rem;
         font-weight: 600;
         margin-bottom: 4px;
       }
       .section-sub {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         color: var(--text-light);
         margin-bottom: 10px;
       }
       .section-text {
-        font-size: 0.93rem;
+        font-size: 0.9rem;
         line-height: 1.6;
       }
 
@@ -201,26 +375,26 @@
         margin-top: 10px;
       }
       .detail-card {
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
-        padding: 14px 14px 12px;
-        background: #fefaf7;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+        border-radius: 16px;
+        padding: 14px 12px 12px;
+        background: radial-gradient(circle at top left, #3d1511, #1b0604 60%);
+        border: 1px solid rgba(255, 189, 157, 0.55);
+        box-shadow: 0 12px 26px rgba(0,0,0,0.7);
       }
       .detail-label {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         text-transform: uppercase;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.16em;
         color: var(--text-light);
         margin-bottom: 4px;
       }
       .detail-time {
-        font-size: 0.95rem;
+        font-size: 0.94rem;
         font-weight: 600;
         margin-bottom: 2px;
       }
       .detail-desc {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         color: var(--text-light);
       }
 
@@ -231,93 +405,97 @@
         margin-top: 10px;
       }
       .couple-card {
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
-        padding: 14px 14px 12px;
-        background: #fffdf9;
+        border-radius: 16px;
+        padding: 14px 12px 10px;
+        background: radial-gradient(circle at top, #351014, #180608);
+        border: 1px solid rgba(255, 189, 164, 0.6);
       }
       .couple-name {
-        font-size: 1rem;
         font-weight: 600;
-        margin-bottom: 4px;
+        font-size: 1rem;
+        margin-bottom: 3px;
       }
       .couple-line {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         color: var(--text-light);
       }
 
       .gallery {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
         margin-top: 12px;
       }
-      .gallery img {
+      .gallery-img-wrap {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 14px 30px rgba(0,0,0,0.8);
+        transform-origin: center;
+        transition: 0.25s;
+      }
+      .gallery-img-wrap img {
         width: 100%;
         height: 150px;
         object-fit: cover;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
+        transition: 0.25s;
       }
+      .gallery-img-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.35), transparent 60%);
+        opacity: 0;
+        transition: 0.25s;
+      }
+      .gallery-img-wrap:hover {
+        transform: translateY(-4px) scale(1.02);
+      }
+      .gallery-img-wrap:hover img {
+        transform: scale(1.06);
+      }
+      .gallery-img-wrap:hover::after { opacity: 1; }
 
       .bottom-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 18px;
+        gap: 16px;
+        margin-top: 16px;
         align-items: center;
         justify-content: space-between;
       }
       .qr-box {
         display: flex;
+        gap: 10px;
         align-items: center;
-        gap: 12px;
         font-size: 0.8rem;
         color: var(--text-light);
       }
       .qr-box img {
-        width: 120px;
-        height: 120px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: #fff;
-      }
-      .btn {
-        padding: 10px 16px;
-        border-radius: 999px;
-        background: var(--accent);
-        border: none;
-        color: #fff;
-        font-size: 0.85rem;
-        cursor: pointer;
-        box-shadow: 0 8px 26px rgba(196,123,155,0.5);
-        transition: 0.2s;
-      }
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 30px rgba(196,123,155,0.75);
-      }
-      .box {
-        padding: 10px;
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
-        background: #fff;
-        font-size: 0.78rem;
-        word-break: break-all;
+        width: 110px;
+        height: 110px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 192, 160, 0.7);
+        background: #140606;
       }
 
       @media (max-width: 900px) {
-        .editor-container { flex-direction: column; }
+        body { overflow: auto; }
+        .editor-container { flex-direction: column; height: auto; }
         .sidebar {
           width: 100%;
+          height: auto;
           border-right: none;
-          border-bottom: 1px solid var(--border);
+          border-bottom: 1px solid rgba(255, 200, 168, 0.3);
         }
-        .preview-area { padding: 16px; }
+        .preview-area { padding: 14px; }
+        .preview-shell { border-radius: 18px; }
+        .gallery { grid-template-columns: repeat(2, 1fr); }
       }
     </style>
   </head>
-
-  <body>
+  <body class="bg-orbs">
+    <div class="sparkles"></div>
     <div id="root"></div>
 
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -328,6 +506,7 @@
       const { useState, useMemo } = React;
 
       function Editor() {
+        // Core info
         const [bride, setBride] = useState("Aaradhya");
         const [groom, setGroom] = useState("Shreyas");
         const [brideParents, setBrideParents] = useState("D/o Mr. & Mrs. ______");
@@ -339,6 +518,7 @@
           "We are delighted to invite you to celebrate our special day with us."
         );
 
+        // Timing details
         const [ceremonyTime, setCeremonyTime] = useState("10:00 AM");
         const [ceremonyDesc, setCeremonyDesc] = useState(
           "Main Hall – Traditional wedding ceremony followed by blessings."
@@ -352,27 +532,34 @@
           "Reception, photos, music and celebration."
         );
 
-        const [heroURL, setHeroURL] = useState(
-          "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
-        );
-        const [gallery, setGallery] = useState(["", "", "", ""]);
-        const [musicURL, setMusicURL] = useState("");
+        // Images – separate preview vs public URL
+        const defaultHero =
+          "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg";
+        const [heroPreview, setHeroPreview] = useState(defaultHero);
+        const [heroUrl, setHeroUrl] = useState(defaultHero);
+
+        const [galleryPreview, setGalleryPreview] = useState([null, null, null, null]);
+        const [galleryUrl, setGalleryUrl] = useState(["", "", "", ""]);
+
+        // Music preview + public URL (for invite)
+        const [musicPreview, setMusicPreview] = useState("");
+        const [musicUrl, setMusicUrl] = useState("");
         const [rsvpNumber, setRsvpNumber] = useState("919019823918");
 
         function handleHeroUpload(e) {
           const file = e.target.files?.[0];
           if (!file) return;
           const url = URL.createObjectURL(file);
-          setHeroURL(url);
+          setHeroPreview(url);
         }
 
-        function handleGalleryUpload(e, index) {
+        function handleGalleryUpload(e, i) {
           const file = e.target.files?.[0];
           if (!file) return;
           const url = URL.createObjectURL(file);
-          setGallery((g) => {
-            const copy = [...g];
-            copy[index] = url;
+          setGalleryPreview((prev) => {
+            const copy = [...prev];
+            copy[i] = url;
             return copy;
           });
         }
@@ -381,9 +568,10 @@
           const file = e.target.files?.[0];
           if (!file) return;
           const url = URL.createObjectURL(file);
-          setMusicURL(url);
+          setMusicPreview(url);
         }
 
+        // invite link – only uses public URLs
         const inviteLink = useMemo(() => {
           const base = window.location.origin + "/invite.html";
           const p = new URLSearchParams();
@@ -402,9 +590,10 @@
           p.set("rTime", receptionTime);
           p.set("rDesc", receptionDesc);
 
-          p.set("hero", heroURL);
-          gallery.forEach((g, i) => g && p.set("g" + (i + 1), g));
-          if (musicURL) p.set("music", musicURL);
+          if (heroUrl) p.set("hero", heroUrl);
+          galleryUrl.forEach((g, i) => g && p.set("g" + (i + 1), g));
+
+          if (musicUrl) p.set("music", musicUrl);
           if (rsvpNumber) p.set("phone", rsvpNumber);
 
           return base + "?" + p.toString();
@@ -422,9 +611,9 @@
           lunchDesc,
           receptionTime,
           receptionDesc,
-          heroURL,
-          gallery,
-          musicURL,
+          heroUrl,
+          galleryUrl,
+          musicUrl,
           rsvpNumber,
         ]);
 
@@ -444,37 +633,40 @@
         return (
           <div className="editor-container">
             {/* LEFT SIDEBAR */}
-            <div className="sidebar">
-              <div className="title">Wedding Editor</div>
-              <div className="subtitle">
-                Customize every detail, then share the generated invite link.
+            <aside className="sidebar">
+              <div className="brand">
+                <div className="brand-icon">💍</div>
+                <div>
+                  <div className="brand-title">Shaadi Studio</div>
+                  <div className="brand-sub">
+                    Luxury saffron-red wedding invitation editor
+                  </div>
+                </div>
               </div>
 
+              {/* Names & families */}
               <div className="field">
                 <label>Bride name</label>
                 <input value={bride} onChange={(e) => setBride(e.target.value)} />
               </div>
-
               <div className="field">
                 <label>Bride parents line</label>
                 <input
                   value={brideParents}
                   onChange={(e) => setBrideParents(e.target.value)}
-                  placeholder="e.g. D/o Mr. & Mrs. Kumar"
+                  placeholder="D/o Mr. & Mrs. ____"
                 />
               </div>
-
               <div className="field">
                 <label>Groom name</label>
                 <input value={groom} onChange={(e) => setGroom(e.target.value)} />
               </div>
-
               <div className="field">
                 <label>Groom parents line</label>
                 <input
                   value={groomParents}
                   onChange={(e) => setGroomParents(e.target.value)}
-                  placeholder="e.g. S/o Mr. & Mrs. Gowda"
+                  placeholder="S/o Mr. & Mrs. ____"
                 />
               </div>
 
@@ -486,7 +678,6 @@
                   onChange={(e) => setDate(e.target.value)}
                 />
               </div>
-
               <div className="field">
                 <label>Location</label>
                 <input
@@ -494,7 +685,6 @@
                   onChange={(e) => setLocation(e.target.value)}
                 />
               </div>
-
               <div className="field">
                 <label>Welcome message</label>
                 <textarea
@@ -504,11 +694,11 @@
                 />
               </div>
 
-              <div className="divider" />
+              <hr className="divider" />
 
-              {/* Wedding details */}
+              {/* Timings */}
               <div className="field">
-                <label>Ceremony time</label>
+                <label>Ceremony time & description</label>
                 <input
                   value={ceremonyTime}
                   onChange={(e) => setCeremonyTime(e.target.value)}
@@ -519,9 +709,8 @@
                   placeholder="Ceremony description"
                 />
               </div>
-
               <div className="field">
-                <label>Lunch time</label>
+                <label>Lunch time & description</label>
                 <input
                   value={lunchTime}
                   onChange={(e) => setLunchTime(e.target.value)}
@@ -532,9 +721,8 @@
                   placeholder="Lunch description"
                 />
               </div>
-
               <div className="field">
-                <label>Reception time</label>
+                <label>Reception time & description</label>
                 <input
                   value={receptionTime}
                   onChange={(e) => setReceptionTime(e.target.value)}
@@ -546,81 +734,126 @@
                 />
               </div>
 
-              <div className="divider" />
+              <hr className="divider" />
 
-              {/* Hero & gallery uploads */}
+              {/* Hero upload + URL */}
               <div className="field">
-                <label>Hero photo</label>
+                <label>Hero photo (preview upload)</label>
                 <div
                   className="upload-area"
-                  onClick={() => document.getElementById("heroInput").click()}
+                  onClick={() => document.getElementById("heroUpload").click()}
                 >
                   <div className="upload-icon">📷</div>
-                  <div>Drag & drop or click to choose hero image</div>
+                  <div>
+                    <div className="upload-text-main">
+                      Drag & drop or click to upload
+                    </div>
+                    <div className="upload-text-sub">
+                      Only you can see this local preview.
+                    </div>
+                  </div>
+                  <div className="upload-pill">Preview</div>
                 </div>
                 <input
-                  id="heroInput"
+                  id="heroUpload"
                   type="file"
-                  className="hidden"
                   accept="image/*"
+                  className="hidden-input"
                   onChange={handleHeroUpload}
                 />
+              </div>
+              <div className="field">
+                <label>Hero image URL (for guests)</label>
+                <input
+                  value={heroUrl}
+                  onChange={(e) => setHeroUrl(e.target.value)}
+                  placeholder="https://public-image-url"
+                />
                 <div className="hint">
-                  (For now this uses a local preview URL, perfect for your own
-                  screen & device.)
+                  Guests see this URL in the invite. Use Pexels / Imgur / Google
+                  Drive public image link.
                 </div>
               </div>
 
-              <div className="field">
-                <label>Gallery photos (4)</label>
-              </div>
+              <hr className="divider" />
 
-              {gallery.map((g, i) => (
+              {/* Gallery 4 */}
+              <div className="field">
+                <label>Gallery photos – preview upload</label>
+                <span className="hint">
+                  Upload for your live preview. For sharing, set URLs below.
+                </span>
+              </div>
+              {galleryPreview.map((_, i) => (
                 <div key={i} className="field">
                   <div
                     className="upload-area"
-                    onClick={() => document.getElementById("g" + i).click()}
+                    onClick={() => document.getElementById("galUp" + i).click()}
                   >
                     <div className="upload-icon">🖼️</div>
-                    <div>Upload photo {i + 1}</div>
+                    <div>
+                      <div className="upload-text-main">Photo {i + 1}</div>
+                      <div className="upload-text-sub">Click to upload preview</div>
+                    </div>
                   </div>
                   <input
-                    id={"g" + i}
+                    id={"galUp" + i}
                     type="file"
-                    className="hidden"
                     accept="image/*"
+                    className="hidden-input"
                     onChange={(e) => handleGalleryUpload(e, i)}
+                  />
+                  <input
+                    style={{ marginTop: "4px" }}
+                    placeholder={`Public URL for photo ${i + 1} (optional for guests)`}
+                    value={galleryUrl[i]}
+                    onChange={(e) =>
+                      setGalleryUrl((prev) => {
+                        const copy = [...prev];
+                        copy[i] = e.target.value;
+                        return copy;
+                      })
+                    }
                   />
                 </div>
               ))}
 
-              <div className="divider" />
+              <hr className="divider" />
 
               {/* Music */}
               <div className="field">
-                <label>Background music (optional)</label>
+                <label>Background music – preview upload</label>
                 <div
                   className="upload-area"
-                  onClick={() => document.getElementById("musicInput").click()}
+                  onClick={() => document.getElementById("musicUpload").click()}
                 >
                   <div className="upload-icon">🎵</div>
-                  <div>Upload MP3 for background</div>
+                  <div>
+                    <div className="upload-text-main">
+                      Drag & drop or click to upload MP3
+                    </div>
+                    <div className="upload-text-sub">
+                      Plays only on your device & invite if you also set URL.
+                    </div>
+                  </div>
                 </div>
                 <input
-                  id="musicInput"
+                  id="musicUpload"
                   type="file"
-                  className="hidden"
                   accept="audio/*"
+                  className="hidden-input"
                   onChange={handleMusicUpload}
                 />
-                <div className="hint">
-                  Plays for you in preview and for guests on invite page.
-                </div>
+              </div>
+              <div className="field">
+                <label>Music URL (for guests, optional)</label>
+                <input
+                  value={musicUrl}
+                  onChange={(e) => setMusicUrl(e.target.value)}
+                  placeholder="https://public-mp3-url"
+                />
               </div>
 
-              <div className="divider" />
-
-              {/* RSVP number */}
               <div className="field">
                 <label>RSVP WhatsApp number</label>
                 <input
@@ -628,13 +861,12 @@
                   onChange={(e) =>
                     setRsvpNumber(e.target.value.replace(/\s+/g, ""))
                   }
-                  placeholder="Include country code, no + or spaces (e.g. 9190...)"
+                  placeholder="Include country code, no + or spaces"
                 />
               </div>
 
-              <div className="divider" />
+              <hr className="divider" />
 
-              {/* Invite link + QR */}
               <div className="field">
                 <label>Invitation link (share this)</label>
                 <div className="box">{inviteLink}</div>
@@ -643,77 +875,72 @@
                   style={{ marginTop: "8px" }}
                   onClick={() => window.open(inviteLink, "_blank")}
                 >
-                  Open invitation page
+                  Open invitation
                 </button>
               </div>
-            </div>
+            </aside>
 
-            {/* RIGHT PREVIEW */}
-            <div className="preview-area">
-              <div className="preview-card">
+            {/* RIGHT – HERO + SECTIONS PREVIEW */}
+            <main className="preview-area">
+              <div className="preview-shell">
                 {/* Hero */}
-                <div className="hero-cover">
-                  <img src={heroURL} alt="Hero" />
-                  <div className="hero-overlay" />
-                  <div className="hero-text-box">
+                <section className="hero">
+                  <img src={heroPreview || heroUrl} alt="Hero" />
+                  <div className="hero-gradient"></div>
+                  <div className="hero-rays"></div>
+                  <div className="hero-content">
                     <div className="hero-pill">
                       <span>{displayDate}</span>
                       <span>•</span>
                       <span>{location}</span>
                     </div>
                     <div className="hero-names">
-                      {bride} &amp; {groom}
+                      {bride} &nbsp; &amp; &nbsp; {groom}
                     </div>
                     <div className="hero-sub">
-                      We are delighted to invite you to celebrate with us.
+                      We are honoured to invite you to our wedding celebration.
                     </div>
                   </div>
-                </div>
+                </section>
 
                 {/* Story */}
-                <div className="section">
+                <section className="section">
                   <div className="section-title">Our Story</div>
                   <div className="section-sub">
-                    A little note from us to you.
+                    A small note from both of us to you.
                   </div>
                   <div className="section-text">{welcome}</div>
-                </div>
+                </section>
 
-                {/* Wedding details */}
-                <div className="section">
+                {/* Details */}
+                <section className="section">
                   <div className="section-title">Wedding Details</div>
                   <div className="section-sub">
-                    Ceremony, lunch and reception timings – all in one place.
+                    Ceremony, lunch and reception timings.
                   </div>
-
                   <div className="details-grid">
                     <div className="detail-card">
                       <div className="detail-label">Ceremony</div>
                       <div className="detail-time">{ceremonyTime}</div>
                       <div className="detail-desc">{ceremonyDesc}</div>
                     </div>
-
                     <div className="detail-card">
                       <div className="detail-label">Lunch</div>
                       <div className="detail-time">{lunchTime}</div>
                       <div className="detail-desc">{lunchDesc}</div>
                     </div>
-
                     <div className="detail-card">
                       <div className="detail-label">Reception</div>
                       <div className="detail-time">{receptionTime}</div>
                       <div className="detail-desc">{receptionDesc}</div>
                     </div>
                   </div>
-                </div>
+                </section>
 
-                {/* Couple details */}
-                <div className="section">
+                {/* Couple */}
+                <section className="section">
                   <div className="section-title">Bride &amp; Groom</div>
-                  <div className="section-sub">
-                    A small note about both families.
-                  </div>
-
+                  <div className="section-sub">Warmly inviting you with family.</div>
                   <div className="couple-grid">
                     <div className="couple-card">
                       <div className="couple-name">{bride}</div>
@@ -724,38 +951,40 @@
                       <div className="couple-line">{groomParents}</div>
                     </div>
                   </div>
-                </div>
+                </section>
 
-                {/* Gallery + QR / link */}
-                <div className="section">
+                {/* Gallery + QR */}
+                <section className="section">
                   <div className="section-title">Gallery</div>
                   <div className="section-sub">
-                    A preview of all the joy we’re looking forward to.
+                    A glimpse of the love and laughter we cherish.
                   </div>
-
                   <div className="gallery">
-                    {gallery.map(
-                      (g, i) =>
-                        g && <img key={i} src={g} alt={"gallery-" + i} />
+                    {(galleryPreview.some(Boolean) ? galleryPreview : galleryUrl).map(
+                      (src, i) =>
+                        src && (
+                          <div key={i} className="gallery-img-wrap">
+                            <img src={src} alt={`Gallery ${i + 1}`} />
+                          </div>
+                        )
                     )}
                   </div>
 
-                  <div className="bottom-row" style={{ marginTop: "18px" }}>
+                  <div className="bottom-row">
                     <div className="qr-box">
                       <img src={qrSrc} alt="Invitation QR" />
                       <div>
-                        Scan this QR on any phone to open the invitation page.
-                        Perfect for printing on a card or sharing quickly.
+                        Scan the QR to open the invitation on any phone – perfect for
+                        printing on cards.
                       </div>
                     </div>
-
                     <button
                       className="btn"
                       onClick={() =>
                         window.open(
                           "https://wa.me/?text=" +
                             encodeURIComponent(
-                              `You are invited to the wedding of ${bride} & ${groom}. Tap to open invitation: ${inviteLink}`
+                              `You are invited to the wedding of ${bride} & ${groom}. Tap to open the invitation: ${inviteLink}`
                             ),
                           "_blank"
                         )
@@ -764,9 +993,27 @@
                       Share invite via WhatsApp
                     </button>
                   </div>
-                </div>
+                </section>
+
+                {/* Music preview */}
+                <section className="section">
+                  <div className="section-title">Preview music</div>
+                  <div className="section-sub">
+                    This plays locally here. Guests hear the URL track if set.
+                  </div>
+                  <audio
+                    style={{ width: "100%", marginTop: "6px", marginBottom: "4px" }}
+                    controls
+                    loop
+                    src={
+                      musicPreview ||
+                      musicUrl ||
+                      "https://cdn.pixabay.com/download/audio/2021/09/30/audio_b4b5c1c8b4.mp3?filename=romantic-inspiring-piano-10890.mp3"
+                    }
+                  ></audio>
+                </section>
               </div>
-            </div>
+            </main>
           </div>
         );
       }
