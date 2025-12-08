@@ -13,6 +13,7 @@
         --border: #e7dcd5;
         --radius: 16px;
         --shadow: 0 10px 28px rgba(0,0,0,0.08);
+        --text-light: #7a6f69;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
@@ -24,7 +25,6 @@
       }
       #root { flex: 1; display: flex; }
 
-      /* Layout */
       .editor-container {
         display: flex;
         width: 100%;
@@ -46,7 +46,7 @@
       }
       .subtitle {
         font-size: 0.8rem;
-        color: #7a6f69;
+        color: var(--text-light);
         margin-bottom: 14px;
       }
       .field {
@@ -74,19 +74,21 @@
         border-color: var(--accent);
         box-shadow: 0 0 0 2px #c47b9b33;
       }
-
+      .hint {
+        font-size: 0.75rem;
+        color: var(--text-light);
+      }
       .divider {
         height: 1px;
         background: var(--border);
         margin: 16px 0;
       }
 
-      /* Upload cards */
       .upload-area {
         background: #fdf8f3;
         border: 2px dashed #d8c8c0;
         border-radius: var(--radius);
-        padding: 22px 14px;
+        padding: 18px 14px;
         text-align: center;
         cursor: pointer;
         transition: 0.25s;
@@ -94,38 +96,37 @@
       .upload-area:hover {
         border-color: var(--accent);
         box-shadow: 0 0 0 2px #c47b9b33;
-        transform: translateY(-3px);
+        transform: translateY(-2px);
       }
       .upload-icon {
-        font-size: 28px;
-        margin-bottom: 6px;
+        font-size: 24px;
+        margin-bottom: 4px;
         animation: float 2s infinite ease-in-out;
       }
       @keyframes float {
         0%,100% { transform: translateY(0); }
-        50% { transform: translateY(-6px); }
+        50% { transform: translateY(-5px); }
       }
-
       .hidden { display: none; }
 
+      /* RIGHT PREVIEW */
       .preview-area {
         flex: 1;
         padding: 24px;
         overflow-y: auto;
       }
-
       .preview-card {
         background: var(--card);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
         overflow: hidden;
-        max-width: 900px;
+        max-width: 960px;
         margin: auto;
       }
-
       .hero-cover {
         position: relative;
         height: 360px;
+        overflow: hidden;
       }
       .hero-cover img {
         width: 100%;
@@ -137,37 +138,149 @@
         from { opacity: 0; transform: scale(1.03); }
         to { opacity: 1; transform: scale(1); }
       }
-
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.2),
+          rgba(0,0,0,0.85)
+        );
+      }
       .hero-text-box {
         position: absolute;
         bottom: 0;
         padding: 40px 30px;
-        background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
         width: 100%;
         color: #fff;
       }
+      .hero-pill {
+        display: inline-flex;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid #ffffff55;
+        background: #ffffff22;
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+        backdrop-filter: blur(6px);
+      }
       .hero-names {
-        font-size: 2.4rem;
+        font-size: 2.5rem;
         font-weight: 600;
         text-shadow: 0 6px 20px #0005;
       }
+      .hero-sub {
+        margin-top: 6px;
+        font-size: 1rem;
+        opacity: 0.95;
+      }
 
       .section {
-        padding: 26px 24px;
+        padding: 24px 24px 26px;
       }
+      .section-title {
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .section-sub {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-bottom: 10px;
+      }
+      .section-text {
+        font-size: 0.93rem;
+        line-height: 1.6;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+        margin-top: 10px;
+      }
+      .detail-card {
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 14px 14px 12px;
+        background: #fefaf7;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      }
+      .detail-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-light);
+        margin-bottom: 4px;
+      }
+      .detail-time {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .detail-desc {
+        font-size: 0.82rem;
+        color: var(--text-light);
+      }
+
+      .couple-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 14px;
+        margin-top: 10px;
+      }
+      .couple-card {
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 14px 14px 12px;
+        background: #fffdf9;
+      }
+      .couple-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .couple-line {
+        font-size: 0.82rem;
+        color: var(--text-light);
+      }
+
       .gallery {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 14px;
+        gap: 12px;
+        margin-top: 12px;
       }
       .gallery img {
         width: 100%;
-        height: 160px;
-        border-radius: var(--radius);
+        height: 150px;
         object-fit: cover;
+        border-radius: var(--radius);
         box-shadow: var(--shadow);
       }
 
+      .bottom-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .qr-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.8rem;
+        color: var(--text-light);
+      }
+      .qr-box img {
+        width: 120px;
+        height: 120px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #fff;
+      }
       .btn {
         padding: 10px 16px;
         border-radius: 999px;
@@ -176,17 +289,30 @@
         color: #fff;
         font-size: 0.85rem;
         cursor: pointer;
-        margin-top: 4px;
         box-shadow: 0 8px 26px rgba(196,123,155,0.5);
         transition: 0.2s;
       }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(196,123,155,0.75);
+      }
       .box {
-        padding: 12px;
-        background: #fff;
-        border: 1px solid var(--border);
+        padding: 10px;
         border-radius: var(--radius);
-        font-size: 0.8rem;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 0.78rem;
         word-break: break-all;
+      }
+
+      @media (max-width: 900px) {
+        .editor-container { flex-direction: column; }
+        .sidebar {
+          width: 100%;
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .preview-area { padding: 16px; }
       }
     </style>
   </head>
@@ -204,18 +330,34 @@
       function Editor() {
         const [bride, setBride] = useState("Aaradhya");
         const [groom, setGroom] = useState("Shreyas");
+        const [brideParents, setBrideParents] = useState("D/o Mr. & Mrs. ______");
+        const [groomParents, setGroomParents] = useState("S/o Mr. & Mrs. ______");
+
         const [date, setDate] = useState("");
         const [location, setLocation] = useState("Bangalore, India");
         const [welcome, setWelcome] = useState(
           "We are delighted to invite you to celebrate our special day with us."
         );
 
+        const [ceremonyTime, setCeremonyTime] = useState("10:00 AM");
+        const [ceremonyDesc, setCeremonyDesc] = useState(
+          "Main Hall – Traditional wedding ceremony followed by blessings."
+        );
+        const [lunchTime, setLunchTime] = useState("01:00 PM");
+        const [lunchDesc, setLunchDesc] = useState(
+          "Grand lunch with family & friends."
+        );
+        const [receptionTime, setReceptionTime] = useState("07:00 PM");
+        const [receptionDesc, setReceptionDesc] = useState(
+          "Reception, photos, music and celebration."
+        );
+
         const [heroURL, setHeroURL] = useState(
           "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg"
         );
-
         const [gallery, setGallery] = useState(["", "", "", ""]);
         const [musicURL, setMusicURL] = useState("");
+        const [rsvpNumber, setRsvpNumber] = useState("919019823918");
 
         function handleHeroUpload(e) {
           const file = e.target.files?.[0];
@@ -228,7 +370,6 @@
           const file = e.target.files?.[0];
           if (!file) return;
           const url = URL.createObjectURL(file);
-
           setGallery((g) => {
             const copy = [...g];
             copy[index] = url;
@@ -236,7 +377,7 @@
           });
         }
 
-        function handleMusic(e) {
+        function handleMusicUpload(e) {
           const file = e.target.files?.[0];
           if (!file) return;
           const url = URL.createObjectURL(file);
@@ -248,67 +389,192 @@
           const p = new URLSearchParams();
           p.set("bride", bride);
           p.set("groom", groom);
+          p.set("bParents", brideParents);
+          p.set("gParents", groomParents);
           if (date) p.set("date", date);
           p.set("location", location);
           p.set("welcome", welcome);
+
+          p.set("cTime", ceremonyTime);
+          p.set("cDesc", ceremonyDesc);
+          p.set("lTime", lunchTime);
+          p.set("lDesc", lunchDesc);
+          p.set("rTime", receptionTime);
+          p.set("rDesc", receptionDesc);
+
           p.set("hero", heroURL);
           gallery.forEach((g, i) => g && p.set("g" + (i + 1), g));
           if (musicURL) p.set("music", musicURL);
+          if (rsvpNumber) p.set("phone", rsvpNumber);
 
           return base + "?" + p.toString();
-        }, [bride, groom, date, location, welcome, heroURL, gallery, musicURL]);
+        }, [
+          bride,
+          groom,
+          brideParents,
+          groomParents,
+          date,
+          location,
+          welcome,
+          ceremonyTime,
+          ceremonyDesc,
+          lunchTime,
+          lunchDesc,
+          receptionTime,
+          receptionDesc,
+          heroURL,
+          gallery,
+          musicURL,
+          rsvpNumber,
+        ]);
+
+        const qrSrc =
+          "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+          encodeURIComponent(inviteLink);
+
+        const displayDate = date
+          ? new Date(date).toLocaleDateString(undefined, {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : "Our Wedding Day";
 
         return (
           <div className="editor-container">
-
-            {/* Sidebar */}
+            {/* LEFT SIDEBAR */}
             <div className="sidebar">
               <div className="title">Wedding Editor</div>
-              <div className="subtitle">Customize & generate invitation link</div>
+              <div className="subtitle">
+                Customize every detail, then share the generated invite link.
+              </div>
 
               <div className="field">
                 <label>Bride name</label>
-                <input value={bride} onChange={(e)=>setBride(e.target.value)} />
+                <input value={bride} onChange={(e) => setBride(e.target.value)} />
+              </div>
+
+              <div className="field">
+                <label>Bride parents line</label>
+                <input
+                  value={brideParents}
+                  onChange={(e) => setBrideParents(e.target.value)}
+                  placeholder="e.g. D/o Mr. & Mrs. Kumar"
+                />
               </div>
 
               <div className="field">
                 <label>Groom name</label>
-                <input value={groom} onChange={(e)=>setGroom(e.target.value)} />
+                <input value={groom} onChange={(e) => setGroom(e.target.value)} />
+              </div>
+
+              <div className="field">
+                <label>Groom parents line</label>
+                <input
+                  value={groomParents}
+                  onChange={(e) => setGroomParents(e.target.value)}
+                  placeholder="e.g. S/o Mr. & Mrs. Gowda"
+                />
               </div>
 
               <div className="field">
                 <label>Wedding date</label>
-                <input type="date" value={date} onChange={(e)=>setDate(e.target.value)} />
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
               </div>
 
               <div className="field">
                 <label>Location</label>
-                <input value={location} onChange={(e)=>setLocation(e.target.value)} />
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
               </div>
 
               <div className="field">
                 <label>Welcome message</label>
-                <textarea value={welcome} onChange={(e)=>setWelcome(e.target.value)} />
+                <textarea
+                  rows={3}
+                  value={welcome}
+                  onChange={(e) => setWelcome(e.target.value)}
+                />
               </div>
 
-              <div className="divider"></div>
+              <div className="divider" />
+
+              {/* Wedding details */}
+              <div className="field">
+                <label>Ceremony time</label>
+                <input
+                  value={ceremonyTime}
+                  onChange={(e) => setCeremonyTime(e.target.value)}
+                />
+                <input
+                  value={ceremonyDesc}
+                  onChange={(e) => setCeremonyDesc(e.target.value)}
+                  placeholder="Ceremony description"
+                />
+              </div>
 
               <div className="field">
-                <label>Hero image</label>
+                <label>Lunch time</label>
+                <input
+                  value={lunchTime}
+                  onChange={(e) => setLunchTime(e.target.value)}
+                />
+                <input
+                  value={lunchDesc}
+                  onChange={(e) => setLunchDesc(e.target.value)}
+                  placeholder="Lunch description"
+                />
+              </div>
+
+              <div className="field">
+                <label>Reception time</label>
+                <input
+                  value={receptionTime}
+                  onChange={(e) => setReceptionTime(e.target.value)}
+                />
+                <input
+                  value={receptionDesc}
+                  onChange={(e) => setReceptionDesc(e.target.value)}
+                  placeholder="Reception description"
+                />
+              </div>
+
+              <div className="divider" />
+
+              {/* Hero & gallery uploads */}
+              <div className="field">
+                <label>Hero photo</label>
                 <div
                   className="upload-area"
                   onClick={() => document.getElementById("heroInput").click()}
                 >
                   <div className="upload-icon">📷</div>
-                  <div>Upload hero cover</div>
+                  <div>Drag & drop or click to choose hero image</div>
                 </div>
-                <input id="heroInput" type="file" className="hidden" accept="image/*"
-                  onChange={handleHeroUpload} />
+                <input
+                  id="heroInput"
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleHeroUpload}
+                />
+                <div className="hint">
+                  (For now this uses a local preview URL, perfect for your own
+                  screen & device.)
+                </div>
               </div>
 
-              <div className="divider"></div>
+              <div className="field">
+                <label>Gallery photos (4)</label>
+              </div>
 
-              <label>Gallery photos (4)</label>
               {gallery.map((g, i) => (
                 <div key={i} className="field">
                   <div
@@ -316,85 +582,191 @@
                     onClick={() => document.getElementById("g" + i).click()}
                   >
                     <div className="upload-icon">🖼️</div>
-                    <div>Upload Photo {i + 1}</div>
+                    <div>Upload photo {i + 1}</div>
                   </div>
                   <input
                     id={"g" + i}
-                    className="hidden"
                     type="file"
+                    className="hidden"
                     accept="image/*"
                     onChange={(e) => handleGalleryUpload(e, i)}
                   />
                 </div>
               ))}
 
-              <div className="divider"></div>
+              <div className="divider" />
 
-              <label>Background music</label>
-              <div
-                className="upload-area"
-                onClick={() => document.getElementById("musicInput").click()}
-              >
-                <div className="upload-icon">🎵</div>
-                <div>Upload MP3</div>
+              {/* Music */}
+              <div className="field">
+                <label>Background music (optional)</label>
+                <div
+                  className="upload-area"
+                  onClick={() => document.getElementById("musicInput").click()}
+                >
+                  <div className="upload-icon">🎵</div>
+                  <div>Upload MP3 for background</div>
+                </div>
+                <input
+                  id="musicInput"
+                  type="file"
+                  className="hidden"
+                  accept="audio/*"
+                  onChange={handleMusicUpload}
+                />
+                <div className="hint">
+                  Plays for you in preview and for guests on invite page.
+                </div>
               </div>
-              <input id="musicInput" className="hidden" type="file" accept="audio/*"
-                onChange={handleMusic} />
 
-              <div className="divider"></div>
+              <div className="divider" />
 
-              <label>Invitation link</label>
-              <div className="box">{inviteLink}</div>
-              <button className="btn" onClick={()=>window.open(inviteLink,"_blank")}>
-                Open invite
-              </button>
+              {/* RSVP number */}
+              <div className="field">
+                <label>RSVP WhatsApp number</label>
+                <input
+                  value={rsvpNumber}
+                  onChange={(e) =>
+                    setRsvpNumber(e.target.value.replace(/\s+/g, ""))
+                  }
+                  placeholder="Include country code, no + or spaces (e.g. 9190...)"
+                />
+              </div>
+
+              <div className="divider" />
+
+              {/* Invite link + QR */}
+              <div className="field">
+                <label>Invitation link (share this)</label>
+                <div className="box">{inviteLink}</div>
+                <button
+                  className="btn"
+                  style={{ marginTop: "8px" }}
+                  onClick={() => window.open(inviteLink, "_blank")}
+                >
+                  Open invitation page
+                </button>
+              </div>
             </div>
 
-            {/* Preview */}
+            {/* RIGHT PREVIEW */}
             <div className="preview-area">
               <div className="preview-card">
-
+                {/* Hero */}
                 <div className="hero-cover">
-                  <img src={heroURL} />
+                  <img src={heroURL} alt="Hero" />
+                  <div className="hero-overlay" />
                   <div className="hero-text-box">
+                    <div className="hero-pill">
+                      <span>{displayDate}</span>
+                      <span>•</span>
+                      <span>{location}</span>
+                    </div>
                     <div className="hero-names">
-                      {bride} & {groom}
+                      {bride} &amp; {groom}
                     </div>
-
-                    <div>
-                      {date
-                        ? new Date(date).toLocaleDateString(undefined, {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
-                        : "Our special day"}
-                      {" • "}
-                      {location}
+                    <div className="hero-sub">
+                      We are delighted to invite you to celebrate with us.
                     </div>
                   </div>
                 </div>
 
+                {/* Story */}
                 <div className="section">
-                  <h3>Our Story</h3>
-                  <p style={{ fontSize: "0.95rem", lineHeight: "1.6", marginTop: "8px" }}>
-                    {welcome}
-                  </p>
+                  <div className="section-title">Our Story</div>
+                  <div className="section-sub">
+                    A little note from us to you.
+                  </div>
+                  <div className="section-text">{welcome}</div>
                 </div>
 
+                {/* Wedding details */}
                 <div className="section">
-                  <h3>Gallery</h3>
+                  <div className="section-title">Wedding Details</div>
+                  <div className="section-sub">
+                    Ceremony, lunch and reception timings – all in one place.
+                  </div>
+
+                  <div className="details-grid">
+                    <div className="detail-card">
+                      <div className="detail-label">Ceremony</div>
+                      <div className="detail-time">{ceremonyTime}</div>
+                      <div className="detail-desc">{ceremonyDesc}</div>
+                    </div>
+
+                    <div className="detail-card">
+                      <div className="detail-label">Lunch</div>
+                      <div className="detail-time">{lunchTime}</div>
+                      <div className="detail-desc">{lunchDesc}</div>
+                    </div>
+
+                    <div className="detail-card">
+                      <div className="detail-label">Reception</div>
+                      <div className="detail-time">{receptionTime}</div>
+                      <div className="detail-desc">{receptionDesc}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Couple details */}
+                <div className="section">
+                  <div className="section-title">Bride &amp; Groom</div>
+                  <div className="section-sub">
+                    A small note about both families.
+                  </div>
+
+                  <div className="couple-grid">
+                    <div className="couple-card">
+                      <div className="couple-name">{bride}</div>
+                      <div className="couple-line">{brideParents}</div>
+                    </div>
+                    <div className="couple-card">
+                      <div className="couple-name">{groom}</div>
+                      <div className="couple-line">{groomParents}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Gallery + QR / link */}
+                <div className="section">
+                  <div className="section-title">Gallery</div>
+                  <div className="section-sub">
+                    A preview of all the joy we’re looking forward to.
+                  </div>
+
                   <div className="gallery">
-                    {gallery.map((g,i)=> g && (
-                      <img key={i} src={g} alt={"img"+i} />
-                    ))}
+                    {gallery.map(
+                      (g, i) =>
+                        g && <img key={i} src={g} alt={"gallery-" + i} />
+                    )}
+                  </div>
+
+                  <div className="bottom-row" style={{ marginTop: "18px" }}>
+                    <div className="qr-box">
+                      <img src={qrSrc} alt="Invitation QR" />
+                      <div>
+                        Scan this QR on any phone to open the invitation page.
+                        Perfect for printing on a card or sharing quickly.
+                      </div>
+                    </div>
+
+                    <button
+                      className="btn"
+                      onClick={() =>
+                        window.open(
+                          "https://wa.me/?text=" +
+                            encodeURIComponent(
+                              `You are invited to the wedding of ${bride} & ${groom}. Tap to open invitation: ${inviteLink}`
+                            ),
+                          "_blank"
+                        )
+                      }
+                    >
+                      Share invite via WhatsApp
+                    </button>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
         );
       }
